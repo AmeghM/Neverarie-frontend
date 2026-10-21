@@ -4,7 +4,7 @@ import { MoveUpRight, ShieldCheck, ScrollText, Copyright } from "lucide-react";
 function Footer() {
   return (
     <>
-      <footer className="border-t-2 border-[#8B5CF6] bg-[#09090B] text-gray-200">
+      <footer className="border-t-2 border-[#8B5CF6]/40 bg-[#09090B] text-gray-200">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 py-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
           {/* info */}
           <div className="min-w-0">
