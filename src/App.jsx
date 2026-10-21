@@ -6,7 +6,7 @@ import PreLoader from "./pages/PreLoader";
 import LandPage from "./pages/LandPage";
 
 function App() {
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
   useEffect(() => {
     setTimeout(() => {
       setLoader(false);
