@@ -118,34 +118,45 @@ function Header() {
               >
                 <CircleUserRound size={21} strokeWidth={1.7} />
               </button>
+
+              {/* Account Buttons */}
               <AnimatePresence>
                 {LogBtn && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 8, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute text-white bg-[#8B5CF6]/30 border border-[#8B5CF6]/40 w-36 overflow-hidden p-2 top-full right-0 z-60 mt-2 rounded-xl backdrop-blur-xl shadow-xl shadow-black/30"
-                  >
-                    <div className="flex flex-col items-center gap-1">
-                      <a
-                        href="/Login"
-                        className="block rounded-lg px-4 py-2.5  text-sm font-medium hover:bg-[#8B5CF6]/15
-              hover:text-[#A78BFA] transition-all duration-100"
-                      >
-                        Login
-                      </a>
-                      <div className="mx-2 w-full h-px bg-white/40"></div>
-                      <a
-                        href="/SignUp"
-                        className="block rounded-lg px-4 py-2.5 text-sm font-medium
-              transition-colors hover:bg-[#8B5CF6]/15
-              hover:text-[#A78BFA]"
-                      >
-                        Sign Up
-                      </a>
-                    </div>
-                  </motion.div>
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 8, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="absolute bg-[#171020]/95 border border-[#8B5CF6]/40 w-4 h-4 overflow-hidden top-11 right-1 z-60  rotate-45 backdrop-blur-xl shadow-xl shadow-black/30"
+                    ></motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 8, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="absolute text-white bg-[#171020]/95 border border-[#8B5CF6]/40 w-36 overflow-hidden p-2 top-full right-0 z-60 mt-2 rounded-xl backdrop-blur-xl shadow-xl shadow-black/30"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <a
+                          href="/Login"
+                          className="block rounded-lg px-4 py-2.5  text-sm font-medium hover:bg-[#8B5CF6]/15
+                hover:text-[#A78BFA] transition-all duration-100"
+                        >
+                          Login
+                        </a>
+                        <div className="mx-2 w-full h-px bg-white/30"></div>
+                        <a
+                          href="/SignUp"
+                          className="block rounded-lg px-4 py-2.5 text-sm font-medium
+                transition-colors hover:bg-[#8B5CF6]/15
+                hover:text-[#A78BFA]"
+                        >
+                          Sign Up
+                        </a>
+                      </div>
+                    </motion.div>
+                  </>
                 )}
               </AnimatePresence>
             </div>
