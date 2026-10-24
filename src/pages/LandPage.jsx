@@ -12,6 +12,14 @@ function LandPage() {
           Work in Progress
         </h1>
       </section>
+      {/* continue */}
+      <section></section>
+
+      {/* Trending */}
+      <section></section>
+
+      {/* about */}
+      <section></section>
       <Footer />
     </>
   );

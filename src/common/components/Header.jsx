@@ -37,6 +37,8 @@ function Header() {
 
   const { scrollY } = useScroll();
 
+  const [LogBtn, setLogBtn] = useState(false);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 30);
   });
@@ -109,12 +111,44 @@ function Header() {
 
           {/* cta */}
           <div className="flex shrink-0 items-center gap-3">
-            <a
-              href="/account"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white transition-all hover::border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10 hover:text-[#8B5CF6]"
-            >
-              <CircleUserRound size={21} strokeWidth={1.7} />
-            </a>
+            <div className="relative">
+              <button
+                onClick={() => setLogBtn((prev) => !prev)}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white transition-all hover::border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10 hover:text-[#8B5CF6]"
+              >
+                <CircleUserRound size={21} strokeWidth={1.7} />
+              </button>
+              <AnimatePresence>
+                {LogBtn && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 8, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="absolute text-white bg-[#8B5CF6]/30 border border-[#8B5CF6]/40 w-36 overflow-hidden p-2 top-full right-0 z-60 mt-2 rounded-xl backdrop-blur-xl shadow-xl shadow-black/30"
+                  >
+                    <div className="flex flex-col items-center gap-1">
+                      <a
+                        href="/Login"
+                        className="block rounded-lg px-4 py-2.5  text-sm font-medium hover:bg-[#8B5CF6]/15
+              hover:text-[#A78BFA] transition-all duration-100"
+                      >
+                        Login
+                      </a>
+                      <div className="mx-2 w-full h-px bg-white/40"></div>
+                      <a
+                        href="/SignUp"
+                        className="block rounded-lg px-4 py-2.5 text-sm font-medium
+              transition-colors hover:bg-[#8B5CF6]/15
+              hover:text-[#A78BFA]"
+                      >
+                        Sign Up
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Mobile menu toggle */}
             <button
