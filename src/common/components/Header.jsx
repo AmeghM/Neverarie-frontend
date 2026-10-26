@@ -147,7 +147,7 @@ function Header() {
                         </a>
                         <div className="mx-2 w-full h-px bg-white/30"></div>
                         <a
-                          href="/SignUp"
+                          href="/auth"
                           className="block rounded-lg px-4 py-2.5 text-sm font-medium
                 transition-colors hover:bg-[#8B5CF6]/15
                 hover:text-[#A78BFA]"

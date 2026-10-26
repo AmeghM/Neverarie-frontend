@@ -5,6 +5,9 @@ import "./App.css";
 import PreLoader from "./pages/PreLoader";
 import LandPage from "./pages/LandPage";
 
+import SignUp from "./common/pages/SignUp";
+import Login from "./common/pages/Login";
+
 function App() {
   const [loader, setLoader] = useState(false);
   useEffect(() => {
@@ -16,6 +19,8 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={loader ? <PreLoader /> : <LandPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </>
   );

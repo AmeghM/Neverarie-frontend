@@ -1,6 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
+html,
+body,
+#root {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  background: #080510 !important;
+}
+
 body {
   font-family: "Lora", serif;
   background-color: #222;

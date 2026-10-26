@@ -1,6 +1,4 @@
-import React from "react";
 import loaderGif from "../assets/media/neverarieLoader.gif";
-import loaderVideo from "../assets/media/LoaderVid.mp4";
 import "../index.css";
 
 function PreLoader() {
@@ -11,14 +9,6 @@ function PreLoader() {
         alt="Loading..."
         className="w-full h-full object-cover"
       />
-      {/* <video
-        src={loaderVideo}
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="w-full h-full object-cover"
-      /> */}
     </div>
   );
 }
