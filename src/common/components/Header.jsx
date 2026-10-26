@@ -7,6 +7,7 @@ import {
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function Header() {
   const NavbarMenu = [
@@ -79,7 +80,7 @@ function Header() {
           }}
           className="relative mx-auto flex items-center justify-between border backdrop-blur-xs"
         >
-          <a href="/" className="flex shrink-0 items-center gap-3">
+          <Link to="/" className="flex shrink-0 items-center gap-3">
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-[#8B5CF6]/50 blur-xl" />
               <img
@@ -91,19 +92,19 @@ function Header() {
             <span className="text-lg font-extrabold uppercase tracking-wide text-white sm:text-xl">
               Neverarie
             </span>
-          </a>
+          </Link>
 
           {/* links */}
           <div className="absolute left-1/2 hidden -translate-x-1/2 md:block">
             <ul className="flex items-center gap-5 lg:gap-8">
               {NavbarMenu.map((item) => (
                 <li key={item.id}>
-                  <a
-                    href={item.link}
+                  <Link
+                    to={item.link}
                     className="py-2 text-sm font-medium text-gray-300 transition-all duration-300 hover:text-white"
                   >
                     {item.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -138,22 +139,22 @@ function Header() {
                       className="absolute text-white bg-[#171020]/95 border border-[#8B5CF6]/40 w-36 overflow-hidden p-2 top-full right-0 z-60 mt-2 rounded-xl backdrop-blur-xl shadow-xl shadow-black/30"
                     >
                       <div className="flex flex-col items-center gap-1">
-                        <a
-                          href="/login"
+                        <Link
+                          to="/login"
                           className="block rounded-lg px-4 py-2.5  text-sm font-medium hover:bg-[#8B5CF6]/15
                 hover:text-[#A78BFA] transition-all duration-100"
                         >
                           Login
-                        </a>
+                        </Link>
                         <div className="mx-2 w-full h-px bg-white/30"></div>
-                        <a
-                          href="/signup"
+                        <Link
+                          to="/signup"
                           className="block rounded-lg px-4 py-2.5 text-sm font-medium
                 transition-colors hover:bg-[#8B5CF6]/15
                 hover:text-[#A78BFA]"
                         >
                           Sign Up
-                        </a>
+                        </Link>
                       </div>
                     </motion.div>
                   </>
