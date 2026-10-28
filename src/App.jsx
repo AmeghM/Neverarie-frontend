@@ -7,6 +7,7 @@ import LandPage from "./pages/LandPage";
 
 import SignUp from "./common/pages/SignUp";
 import Login from "./common/pages/Login";
+import Discover from "./common/pages/Discover";
 
 function App() {
   const [loader, setLoader] = useState(false);
@@ -21,6 +22,9 @@ function App() {
         <Route path="/" element={loader ? <PreLoader /> : <LandPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/discover" element={<Discover />} />
+
+        {/* admin */}
       </Routes>
     </>
   );

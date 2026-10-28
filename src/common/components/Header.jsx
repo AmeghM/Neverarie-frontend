@@ -7,7 +7,7 @@ import {
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 function Header() {
   const NavbarMenu = [
@@ -39,6 +39,7 @@ function Header() {
   const { scrollY } = useScroll();
 
   const [LogBtn, setLogBtn] = useState(false);
+  const [active, setActive] = useState("Home");
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 30);
@@ -99,12 +100,24 @@ function Header() {
             <ul className="flex items-center gap-5 lg:gap-8">
               {NavbarMenu.map((item) => (
                 <li key={item.id}>
-                  <Link
+                  <NavLink
                     to={item.link}
-                    className="py-2 text-sm font-medium text-gray-300 transition-all duration-300 hover:text-white"
+                    end={item.link === "/"}
+                    className="py-2 relative text-sm font-medium text-gray-300 transition-all duration-300 hover:text-white"
                   >
-                    {item.title}
-                  </Link>
+                    {({ isActive }) => (
+                      <>
+                        {item.title}
+                        {isActive && (
+                          <motion.span
+                            layoutId="active"
+                            className="absolute -bottom-1 left-1/2 h-1.5 w-1.5
+               -translate-x-1/2 rounded-full bg-[#8B5CF6]"
+                          />
+                        )}
+                      </>
+                    )}
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -115,7 +128,7 @@ function Header() {
             <div className="relative">
               <button
                 onClick={() => setLogBtn((prev) => !prev)}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white transition-all hover::border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10 hover:text-[#8B5CF6]"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white transition-all hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10 hover:text-[#8B5CF6]"
               >
                 <CircleUserRound size={21} strokeWidth={1.7} />
               </button>
@@ -193,13 +206,13 @@ function Header() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                   >
-                    <a
-                      href={item.link}
+                    <Link
+                      to={item.link}
                       onClick={() => setOpen(false)}
                       className="block rounded-xl px-4 py-3 text-sm font-medium text-gray-200 transition-colors hover:bg-[#8B5CF6]/10 hover:text-[#8B5CF6]"
                     >
                       {item.title}
-                    </a>
+                    </Link>
                   </motion.li>
                 ))}
               </ul>
@@ -228,13 +241,13 @@ function Header() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <a
-                    href={item.link}
+                  <Link
+                    to={item.link}
                     onClick={() => setOpen(false)}
                     className="block rounded-xl px-4 py-3 text-sm font-medium text-gray-200 transition-colors hover:bg-[#8B5CF6]/10 hover:text-[#8B5CF6]"
                   >
                     {item.title}
-                  </a>
+                  </Link>
                 </motion.li>
               ))}
             </ul>
