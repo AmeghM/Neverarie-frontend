@@ -78,7 +78,7 @@ function Footer() {
                   href="/about"
                   className="transition-all duration-200 hover:text-[#A78BFA]"
                 >
-                  About
+                  Author
                 </a>
               </li>
             </ul>
@@ -98,14 +98,14 @@ function Footer() {
                   Support
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="/authors"
                   className="transition-all duration-200 hover:text-[#A78BFA]"
                 >
                   Authors
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a
                   href="/partners"

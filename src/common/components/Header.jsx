@@ -23,8 +23,8 @@ function Header() {
     },
     {
       id: 3,
-      title: "About",
-      link: "/about",
+      title: "Author",
+      link: "/author",
     },
     {
       id: 4,
