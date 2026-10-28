@@ -114,15 +114,23 @@ function Author() {
             <h2 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
               More than a website.
               <span className="block text-white/50">
-                A world built around stories.
+                A collection of Untold Stories
               </span>
             </h2>
 
             <p className="mt-6 max-w-3xl text-sm leading-7 text-white/60 sm:text-base sm:leading-8">
-              Neverarie is a place shaped by imagination and a love for
-              storytelling. My goal is to make discovering stories feel
-              immersive, meaningful, and enjoyable, while continuing to grow
-              this space with care and creativity.
+              A little corner of my mind where stories finally get to exist
+              beyond my head. Some might be beautiful, some dark, strange, or
+              downright messed up. Some are ideas I've carried for a long time,
+              others are worlds I'm still figuring out.
+            </p>
+            <p className="mt-1 max-w-3xl text-sm leading-7 text-white/60 sm:text-base sm:leading-8">
+              I don't know if every story will be good, but they're mine, and
+              it's time they found a place to live.
+            </p>
+            <p className="mt-1 max-w-3xl text-sm leading-7 text-white/60 sm:text-base sm:leading-8">
+              So, this is my little graveyard of untold stories. Some of them
+              might come back to life.
             </p>
           </div>
         </section>
