@@ -39,7 +39,6 @@ function Header() {
   const { scrollY } = useScroll();
 
   const [LogBtn, setLogBtn] = useState(false);
-  const [active, setActive] = useState("Home");
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 30);
@@ -103,18 +102,23 @@ function Header() {
                   <NavLink
                     to={item.link}
                     end={item.link === "/"}
-                    className="py-2 relative text-sm font-medium text-gray-300 transition-all duration-300 hover:text-white"
+                    className={({ isActive }) =>
+                      `relative flex flex-col items-center gap-1 py-2 text-sm font-medium transition-colors duration-200 ${
+                        isActive
+                          ? "text-white"
+                          : "text-gray-300 hover:text-white"
+                      }`
+                    }
                   >
                     {({ isActive }) => (
                       <>
                         {item.title}
-                        {isActive && (
-                          <motion.span
-                            layoutId="active"
-                            className="absolute -bottom-1 left-1/2 h-1.5 w-1.5
-               -translate-x-1/2 rounded-full bg-[#8B5CF6]"
-                          />
-                        )}
+
+                        <span
+                          className={`absolute -bottom-0.5 h-1.25 w-1.25 rounded-full bg-[#A78BFA] transition-opacity duration-200 ${
+                            isActive ? "opacity-100" : "opacity-0"
+                          }`}
+                        />
                       </>
                     )}
                   </NavLink>
