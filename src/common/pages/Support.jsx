@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import HalftoneReveal from "../../components/HalftoneReveal";
 
 function Support() {
   const [openFaq, setOpenFaq] = useState(0);
@@ -67,13 +68,13 @@ function Support() {
           <div className="absolute inset-0 bg-[#0B0812]" />
 
           {/* Introduction text */}
-          <div className="relative z-10 mx-auto w-full max-w-5xl">
+          <div className="relative z-10 mx-auto w-full max-w-5xl grid items-center gap=8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
             <div className="max-w-2xl">
               <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#A78BFA] sm:text-sm">
                 Neverarie Support
               </p>
 
-              <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
                 We're here to help
                 <span className="mt-2 block text-[#A78BFA]">you out.</span>
               </h1>
@@ -98,6 +99,36 @@ function Support() {
                 >
                   Explore FAQs
                 </a>
+              </div>
+            </div>
+
+            {/* Right */}
+            <div className="relative mx-auto hidden w-full max-w-md lg:block lg:max-w-none">
+              <div className="relative h-80 w-full overflow-hidden rounded-2xl sm:h-110 lg:h-125">
+                <HalftoneReveal
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0TuVwaQs-wpAF0Yo0WFcKfppwWckOVv-PiPTsyqf27Qhnk1CMmgqNJEE&s=10"
+                  mode="mono"
+                  shape="dot"
+                  cellSize={6}
+                  angle={45}
+                  inkColor="#c1aefc"
+                  paperColor="#120f17"
+                  revealRadius={160}
+                  dotScale={1}
+                  contrast={1.1}
+                  brightness={0}
+                  invert={false}
+                  roughness={0}
+                  misregistration={0}
+                  fit="contain"
+                  accentColor="#ff4f2a"
+                  softness={0.6}
+                  linger={1.2}
+                  reverse={false}
+                  wander={false}
+                  clickBurst
+                  intro
+                />
               </div>
             </div>
           </div>
@@ -127,7 +158,7 @@ function Support() {
                 <a
                   key={item.number}
                   href="#contact"
-                  className="group rounded-2xl border border-white/8 bg-white/2 p-7 transition duration-300 hover:-translate-y-1 hover:border-[#A78BFA]/30 hover:bg-[#A78BFA]/[0.04] sm:p-8"
+                  className="group rounded-2xl border border-white/8 bg-white/2 p-7 transition duration-300 hover:-translate-y-1 hover:border-[#A78BFA]/30 hover:bg-[#A78BFA]/4 sm:p-8"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold tracking-[0.2em] text-[#A78BFA]">
