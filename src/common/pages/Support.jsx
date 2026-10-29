@@ -2,6 +2,8 @@ import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HalftoneReveal from "../../components/HalftoneReveal";
+import Lanyard from "../../components/Lanyard";
+import LogoImg from "../../assets/media/Logo.png";
 
 function Support() {
   const [openFaq, setOpenFaq] = useState(0);
@@ -68,7 +70,7 @@ function Support() {
           <div className="absolute inset-0 bg-[#0B0812]" />
 
           {/* Introduction text */}
-          <div className="relative z-10 mx-auto w-full max-w-5xl grid items-center gap=8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+          <div className="relative z-10 mx-auto w-full max-w-5xl grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
             <div className="max-w-2xl">
               <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#A78BFA] sm:text-sm">
                 Neverarie Support
@@ -105,7 +107,7 @@ function Support() {
             {/* Right */}
             <div className="relative mx-auto hidden w-full max-w-md lg:block lg:max-w-none">
               <div className="relative h-80 w-full overflow-hidden rounded-2xl sm:h-110 lg:h-125">
-                <HalftoneReveal
+                {/* <HalftoneReveal
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0TuVwaQs-wpAF0Yo0WFcKfppwWckOVv-PiPTsyqf27Qhnk1CMmgqNJEE&s=10"
                   mode="mono"
                   shape="dot"
@@ -127,6 +129,31 @@ function Support() {
                   reverse={false}
                   wander={false}
                   clickBurst
+                  intro
+                /> */}
+
+                <Lanyard
+                  frontImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0TuVwaQs-wpAF0Yo0WFcKfppwWckOVv-PiPTsyqf27Qhnk1CMmgqNJEE&s=10"
+                  backImage={LogoImg}
+                  strapImage="/band.png"
+                  // imageFit="cover"
+                  frontImageFit="cover"
+                  backImageFit="contain"
+                  cardColor="#A78BFA"
+                  orientation="portrait"
+                  finish="glossy"
+                  cornerRadius={0.3}
+                  size={0.6}
+                  anchor="center"
+                  strapLength={0.5}
+                  strapColor="#111111"
+                  strapWidth={0.65}
+                  metal="silver"
+                  gravity={1}
+                  damping={0.5}
+                  elasticity={0.5}
+                  breeze={0.8}
+                  interactive
                   intro
                 />
               </div>
