@@ -5,13 +5,21 @@ import GridMotion from "../../components/GridMotion";
 function Author() {
   const items = [
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-w4ptfOeV-yVz9Ruv-Xca0iMxBn0VVHWv1giCFSZuFA&s=10",
-    "Neverarie",
+    <div key="custom" className="text-[#A78BFA] font-semibold">
+      Neverarie
+    </div>,
     "https://i.pinimg.com/736x/5e/f9/6e/5ef96e57e7abcf79cb2af83efbe06d34.jpg",
-    "Neverarie",
+    <div key="custom" className="text-[#A78BFA] font-semibold">
+      Neverarie
+    </div>,
     "https://i.pinimg.com/236x/b6/35/6e/b6356e4833de27bf045cde154aec2c7f.jpg",
-    "Neverarie",
+    <div key="custom" className="text-[#A78BFA] font-semibold">
+      Neverarie
+    </div>,
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwSp11XF3nDbeo0ZZ8kxCBvTdFPA8fzBDFDySQwbiSqw&s=10",
-    "Neverarie",
+    <div key="custom" className="text-[#A78BFA] font-semibold">
+      Neverarie
+    </div>,
   ];
 
   return (
@@ -69,7 +77,7 @@ function Author() {
           <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[0.85fr_1.15fr] md:items-center md:gap-16 lg:gap-24">
             {/* Portrait */}
             <div className="mx-auto w-full max-w-sm">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+              <div className="relative aspect-4/5 overflow-hidden rounded-2xl border border-white/10 bg-white/3">
                 {/* Replace this with your portrait */}
                 <div className="flex h-full items-center justify-center text-sm text-white/30">
                   Author portrait
@@ -114,7 +122,7 @@ function Author() {
             <h2 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
               More than a website.
               <span className="block text-white/50">
-                A collection of Untold Stories
+                A collection of Untold Stories...
               </span>
             </h2>
 
