@@ -57,7 +57,7 @@ function LandPage() {
 
       {/* Continue / Featured */}
       <section className="px-3 sm:px-5 py-10 sm:py-16">
-        <div className="min-h-[40vh] sm:min-h-[50vh] rounded-2xl bg-linear-to-br from-amber-400 to-amber-600 flex items-center justify-center">
+        <div className="min-h-[40vh] sm:min-h-[50vh] rounded-2xl bg-linear-to-br from-[#ae8df9] to-[#8B5CF6] flex items-center justify-center">
           <h2 className="text-2xl sm:text-4xl font-semibold text-[#171126]">
             Continue Your Journey
           </h2>

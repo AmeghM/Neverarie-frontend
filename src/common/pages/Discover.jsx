@@ -1,12 +1,15 @@
-import Header from "../components/Header";
+import Header from "../../common/components/Header";
+import Footer from "../../common/components/Footer";
 
 function Discover() {
   return (
     <>
       <Header />
-      <section className="h-screen w-full pt-25 px-4">
-        <div className="text-white">hello</div>
+      <section className="px-2 pt-3 h-screen">
+        <div>hello</div>
       </section>
+      Discover
+      <Footer />
     </>
   );
 }
