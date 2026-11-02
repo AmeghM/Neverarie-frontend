@@ -14,3 +14,10 @@ body {
   font-family: "Lora", serif;
   background-color: #222;
 }
+
+@media (pointer: fine) {
+  body,
+  body * {
+    cursor: none !important;
+  }
+}

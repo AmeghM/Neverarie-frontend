@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import HalftoneReveal from "../../components/HalftoneReveal";
+
 import Lanyard from "../../components/Lanyard";
 import LogoImg from "../../assets/media/Logo.png";
 
@@ -107,31 +107,6 @@ function Support() {
             {/* Right */}
             <div className="relative mx-auto hidden w-full max-w-md lg:block lg:max-w-none">
               <div className="relative h-80 w-full overflow-hidden rounded-2xl sm:h-110 lg:h-125">
-                {/* <HalftoneReveal
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0TuVwaQs-wpAF0Yo0WFcKfppwWckOVv-PiPTsyqf27Qhnk1CMmgqNJEE&s=10"
-                  mode="mono"
-                  shape="dot"
-                  cellSize={6}
-                  angle={45}
-                  inkColor="#c1aefc"
-                  paperColor="#120f17"
-                  revealRadius={160}
-                  dotScale={1}
-                  contrast={1.1}
-                  brightness={0}
-                  invert={false}
-                  roughness={0}
-                  misregistration={0}
-                  fit="contain"
-                  accentColor="#ff4f2a"
-                  softness={0.6}
-                  linger={1.2}
-                  reverse={false}
-                  wander={false}
-                  clickBurst
-                  intro
-                /> */}
-
                 <Lanyard
                   frontImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0TuVwaQs-wpAF0Yo0WFcKfppwWckOVv-PiPTsyqf27Qhnk1CMmgqNJEE&s=10"
                   backImage={LogoImg}
@@ -139,14 +114,14 @@ function Support() {
                   // imageFit="cover"
                   frontImageFit="cover"
                   backImageFit="contain"
-                  cardColor="#A78BFA"
+                  cardColor="#1a1a1a"
                   orientation="portrait"
                   finish="glossy"
                   cornerRadius={0.3}
                   size={0.6}
                   anchor="center"
                   strapLength={0.5}
-                  strapColor="#111111"
+                  strapColor="#A78BFA"
                   strapWidth={0.65}
                   metal="silver"
                   gravity={1}

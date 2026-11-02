@@ -10,6 +10,7 @@ import Login from "./common/pages/Login";
 import Discover from "./common/pages/Discover";
 import Support from "./common/pages/Support";
 import Author from "./common/pages/Author";
+import Cursor from "./common/components/Cursor";
 
 function App() {
   const [loader, setLoader] = useState(false);
@@ -20,6 +21,7 @@ function App() {
   }, []);
   return (
     <>
+      <Cursor />
       <Routes>
         <Route path="/" element={loader ? <PreLoader /> : <LandPage />} />
         <Route path="/login" element={<Login />} />
