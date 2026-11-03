@@ -137,8 +137,8 @@ function Support() {
         </section>
 
         {/* Support categories */}
-        <section className="px-6 py-20 sm:py-28 lg:py-32">
-          <div className="mx-auto max-w-6xl">
+        <section className="px-6 py-20 sm:py-28 lg:py-32 ">
+          <div className="mx-auto max-w-5xl">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#A78BFA]">
                 What do you need?
@@ -190,7 +190,7 @@ function Support() {
 
         {/* Frequently asked questions */}
         <section id="faq" className="scroll-mt-24 px-6 py-20 sm:py-28 lg:py-32">
-          <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+          <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#A78BFA]">
                 Frequently asked questions
@@ -261,7 +261,7 @@ function Support() {
 
         {/* Contact form */}
         <section id="contact" className="scroll-mt-24 px-6 pb-24 sm:pb-32">
-          <div className="mx-auto max-w-6xl border-t border-white/10 pt-12 sm:pt-16">
+          <div className="mx-auto max-w-5xl border-t border-white/10 pt-12 sm:pt-16">
             <div className="grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:items-start md:gap-16 lg:gap-24">
               {/* Contact introduction */}
               <div className="py-2">
@@ -383,7 +383,7 @@ function Support() {
                   <textarea
                     id="support-message"
                     name="message"
-                    rows={6}
+                    rows={3}
                     placeholder="Tell me a little more about what's on your mind..."
                     required
                     className="w-full resize-y rounded-xl border border-white/10 bg-[#0B0812] px-4 py-3.5 text-sm leading-7 text-white outline-none transition placeholder:text-white/25 focus:border-[#A78BFA]/60 focus:ring-1 focus:ring-[#A78BFA]/20"

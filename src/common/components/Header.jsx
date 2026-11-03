@@ -89,7 +89,7 @@ function Header() {
                 className="relative z-10 h-10 w-10 object-contain"
               />
             </div>
-            <span className="text-lg font-extrabold uppercase tracking-wide text-white sm:text-xl">
+            <span className="text-lg font-extrabold uppercase tracking-wide sm:text-xl animate-gradient">
               Neverarie
             </span>
           </Link>

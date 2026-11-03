@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-const DEFAULT_SRC = 'https://images.unsplash.com/photo-1693250707557-a846a014b321?q=80&w=1400&auto=format&fit=crop';
+const DEFAULT_SRC =
+  "https://images.unsplash.com/photo-1693250707557-a846a014b321?q=80&w=1400&auto=format&fit=crop";
 
 const VERTEX = `#version 300 es
 in vec2 aPosition;
@@ -311,7 +312,7 @@ const link = (gl, fragmentSource) => {
   if (!vertex || !fragment || !program) return null;
   gl.attachShader(program, vertex);
   gl.attachShader(program, fragment);
-  gl.bindAttribLocation(program, 0, 'aPosition');
+  gl.bindAttribLocation(program, 0, "aPosition");
   gl.linkProgram(program);
   gl.deleteShader(vertex);
   gl.deleteShader(fragment);
@@ -328,7 +329,7 @@ const locate = (gl, program, names) => {
 
 const wanderAt = (t, w, h) => [
   w * (0.5 + 0.32 * Math.sin(t * 0.53) + 0.08 * Math.sin(t * 1.31 + 0.6)),
-  h * (0.5 + 0.27 * Math.sin(t * 0.71 + 1.1) + 0.07 * Math.cos(t * 1.57))
+  h * (0.5 + 0.27 * Math.sin(t * 0.71 + 1.1) + 0.07 * Math.cos(t * 1.57)),
 ];
 
 const measureEdge = (context, image) => {
@@ -357,21 +358,25 @@ const measureEdge = (context, image) => {
   }
   const matte = [sum[0] / count, sum[1] / count, sum[2] / count];
   const spread =
-    matte.reduce((total, mean, c) => total + Math.sqrt(Math.max(0, squares[c] / count - mean * mean)), 0) / 3;
+    matte.reduce(
+      (total, mean, c) =>
+        total + Math.sqrt(Math.max(0, squares[c] / count - mean * mean)),
+      0,
+    ) / 3;
   return { matte, plain: clear < count * 0.5 && spread < 0.06 };
 };
 
 const HalftoneReveal = ({
   src = DEFAULT_SRC,
-  fit = 'cover',
-  mode = 'mono',
-  shape = 'dot',
+  fit = "cover",
+  mode = "mono",
+  shape = "dot",
   cellSize = 6,
   angle = 45,
   dotScale = 1,
-  inkColor = '#120f17',
-  accentColor = '#ff4f2a',
-  paperColor = '#ffffff',
+  inkColor = "#120f17",
+  accentColor = "#ff4f2a",
+  paperColor = "#ffffff",
   contrast = 1.1,
   brightness = 0,
   invert = false,
@@ -384,8 +389,8 @@ const HalftoneReveal = ({
   wander = false,
   clickBurst = true,
   intro = true,
-  className = '',
-  style
+  className = "",
+  style,
 }) => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
@@ -411,7 +416,7 @@ const HalftoneReveal = ({
     reverse,
     wander,
     clickBurst,
-    intro
+    intro,
   };
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -419,12 +424,12 @@ const HalftoneReveal = ({
   useEffect(() => {
     const container = containerRef.current;
     const canvas = canvasRef.current;
-    const gl = canvas?.getContext('webgl2', {
+    const gl = canvas?.getContext("webgl2", {
       alpha: false,
       antialias: false,
       depth: false,
       stencil: false,
-      preserveDrawingBuffer: false
+      preserveDrawingBuffer: false,
     });
     if (!container || !canvas || !gl) return undefined;
 
@@ -432,58 +437,72 @@ const HalftoneReveal = ({
     const viewProgram = link(gl, VIEW);
     if (!maskProgram || !viewProgram) return undefined;
     const maskUniforms = locate(gl, maskProgram, [
-      'uPrevious',
-      'uTexture',
-      'uView',
-      'uFrom',
-      'uTo',
-      'uRadius',
-      'uSoftness',
-      'uStrength',
-      'uFade'
+      "uPrevious",
+      "uTexture",
+      "uView",
+      "uFrom",
+      "uTo",
+      "uRadius",
+      "uSoftness",
+      "uStrength",
+      "uFade",
     ]);
     const viewUniforms = locate(gl, viewProgram, [
-      'uImage',
-      'uMask',
-      'uResolution',
-      'uView',
-      'uDpr',
-      'uFrame',
-      'uTexels',
-      'uMode',
-      'uShape',
-      'uCell',
-      'uAngle',
-      'uScale',
-      'uInk',
-      'uAccent',
-      'uPaper',
-      'uContrast',
-      'uBrightness',
-      'uInvert',
-      'uRough',
-      'uShift',
-      'uMatte',
-      'uKey',
-      'uReverse',
-      'uIntro',
-      'uBursts',
-      'uBurstWidth'
+      "uImage",
+      "uMask",
+      "uResolution",
+      "uView",
+      "uDpr",
+      "uFrame",
+      "uTexels",
+      "uMode",
+      "uShape",
+      "uCell",
+      "uAngle",
+      "uScale",
+      "uInk",
+      "uAccent",
+      "uPaper",
+      "uContrast",
+      "uBrightness",
+      "uInvert",
+      "uRough",
+      "uShift",
+      "uMatte",
+      "uKey",
+      "uReverse",
+      "uIntro",
+      "uBursts",
+      "uBurstWidth",
     ]);
 
     const vao = gl.createVertexArray();
     const buffer = gl.createBuffer();
     gl.bindVertexArray(vao);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 3, -1, -1, 3]),
+      gl.STATIC_DRAW,
+    );
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
     gl.bindVertexArray(null);
 
-    const floatMask = !!gl.getExtension('EXT_color_buffer_float');
+    const floatMask = !!gl.getExtension("EXT_color_buffer_float");
     const imageTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, imageTexture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      1,
+      1,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      new Uint8Array(4),
+    );
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -492,28 +511,59 @@ const HalftoneReveal = ({
     const createMask = (width, height) => {
       const texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, texture);
-      if (floatMask) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, width, height, 0, gl.RGBA, gl.HALF_FLOAT, null);
-      else gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      if (floatMask)
+        gl.texImage2D(
+          gl.TEXTURE_2D,
+          0,
+          gl.RGBA16F,
+          width,
+          height,
+          0,
+          gl.RGBA,
+          gl.HALF_FLOAT,
+          null,
+        );
+      else
+        gl.texImage2D(
+          gl.TEXTURE_2D,
+          0,
+          gl.RGBA,
+          width,
+          height,
+          0,
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          null,
+        );
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       const framebuffer = gl.createFramebuffer();
       gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+      gl.framebufferTexture2D(
+        gl.FRAMEBUFFER,
+        gl.COLOR_ATTACHMENT0,
+        gl.TEXTURE_2D,
+        texture,
+        0,
+      );
       gl.clearColor(0, 0, 0, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       return { texture, framebuffer, width, height };
     };
-    const destroyMask = target => {
+    const destroyMask = (target) => {
       gl.deleteFramebuffer(target.framebuffer);
       gl.deleteTexture(target.texture);
     };
     let masks = [createMask(2, 2), createMask(2, 2)];
 
-    const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const probe = document
+      .createElement("canvas")
+      .getContext("2d", { willReadFrequently: true });
+    const reduce =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     const colorCache = new Map();
     const bursts = [];
     const burstData = new Float32Array(MAX_BURSTS * 4);
@@ -529,19 +579,19 @@ const HalftoneReveal = ({
       introStart: 0,
       presence: 0,
       drift: 0,
-      trailUntil: 0
+      trailUntil: 0,
     };
     let raf = 0;
     let last = 0;
     let visible = true;
     let alive = true;
 
-    const toRgb = value => {
+    const toRgb = (value) => {
       if (colorCache.has(value)) return colorCache.get(value);
       let rgb = [0, 0, 0];
       if (probe && value) {
         probe.clearRect(0, 0, 1, 1);
-        probe.fillStyle = '#000000';
+        probe.fillStyle = "#000000";
         probe.fillStyle = /^[0-9a-f]{3,8}$/i.test(value) ? `#${value}` : value;
         probe.fillRect(0, 0, 1, 1);
         const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
@@ -551,10 +601,13 @@ const HalftoneReveal = ({
       return rgb;
     };
 
-    const frameRect = s => {
+    const frameRect = (s) => {
       const { image, width, height } = state;
       if (!image) return [0, 0, width, height];
-      const scale = (s.fit === 'cover' ? Math.max : Math.min)(width / image.naturalWidth, height / image.naturalHeight);
+      const scale = (s.fit === "cover" ? Math.max : Math.min)(
+        width / image.naturalWidth,
+        height / image.naturalHeight,
+      );
       const w = image.naturalWidth * scale;
       const h = image.naturalHeight * scale;
       return [(width - w) / 2, (height - h) / 2, w, h];
@@ -594,10 +647,16 @@ const HalftoneReveal = ({
       gl.uniform2f(maskUniforms.uView, state.width, state.height);
       gl.uniform2f(maskUniforms.uFrom, brush.px, brush.py);
       gl.uniform2f(maskUniforms.uTo, brush.x, brush.y);
-      gl.uniform1f(maskUniforms.uRadius, s.revealRadius * (0.45 + 0.55 * state.presence));
+      gl.uniform1f(
+        maskUniforms.uRadius,
+        s.revealRadius * (0.45 + 0.55 * state.presence),
+      );
       gl.uniform1f(maskUniforms.uSoftness, s.softness);
       gl.uniform1f(maskUniforms.uStrength, state.presence);
-      gl.uniform1f(maskUniforms.uFade, Math.max(s.linger > 0 ? dt / s.linger : 1, minimum));
+      gl.uniform1f(
+        maskUniforms.uFade,
+        Math.max(s.linger > 0 ? dt / s.linger : 1, minimum),
+      );
       gl.bindVertexArray(vao);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -607,7 +666,11 @@ const HalftoneReveal = ({
     const drawView = (s, now) => {
       const [fx, fy, fw, fh] = frameRect(s);
       const image = state.image;
-      const intro = !image ? 0 : !s.intro || reduce ? 1 : Math.min(1, (now - state.introStart) / 1000 / INTRO_SECONDS);
+      const intro = !image
+        ? 0
+        : !s.intro || reduce
+          ? 1
+          : Math.min(1, (now - state.introStart) / 1000 / INTRO_SECONDS);
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.useProgram(viewProgram);
       gl.activeTexture(gl.TEXTURE0);
@@ -639,18 +702,23 @@ const HalftoneReveal = ({
       gl.uniform1f(viewUniforms.uReverse, s.reverse ? 1 : 0);
       gl.uniform1f(viewUniforms.uIntro, 1 - (1 - intro) * (1 - intro));
       gl.uniform4fv(viewUniforms.uBursts, burstData);
-      gl.uniform1f(viewUniforms.uBurstWidth, Math.max(60, s.revealRadius * 0.9));
+      gl.uniform1f(
+        viewUniforms.uBurstWidth,
+        Math.max(60, s.revealRadius * 0.9),
+      );
       gl.bindVertexArray(vao);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       gl.bindVertexArray(null);
       return intro;
     };
 
-    const frame = now => {
+    const frame = (now) => {
       raf = 0;
       if (!alive || !visible || document.hidden) return;
       const s = settingsRef.current;
-      const dt = last ? Math.min(0.05, Math.max(0, (now - last) / 1000)) : 1 / 60;
+      const dt = last
+        ? Math.min(0.05, Math.max(0, (now - last) / 1000))
+        : 1 / 60;
       last = now;
 
       const wandering = s.wander && !reduce;
@@ -666,7 +734,8 @@ const HalftoneReveal = ({
         state.drift = 0;
       }
       const engaged = pointer.inside || wandering;
-      state.presence += ((engaged ? 1 : 0) - state.presence) * (1 - Math.exp(-dt / 0.16));
+      state.presence +=
+        ((engaged ? 1 : 0) - state.presence) * (1 - Math.exp(-dt / 0.16));
       if (pointer.fresh) {
         brush.x = brush.px = targetX;
         brush.y = brush.py = targetY;
@@ -679,44 +748,68 @@ const HalftoneReveal = ({
 
       burstData.fill(0);
       for (let i = bursts.length - 1; i >= 0; i--) {
-        if ((now - bursts[i].start) / 1000 >= BURST_SECONDS) bursts.splice(i, 1);
+        if ((now - bursts[i].start) / 1000 >= BURST_SECONDS)
+          bursts.splice(i, 1);
       }
       bursts.forEach((b, i) => {
         const k = Math.max(0, (now - b.start) / 1000 / BURST_SECONDS);
-        const reach = Math.hypot(Math.max(b.x, state.width - b.x), Math.max(b.y, state.height - b.y)) + 80;
+        const reach =
+          Math.hypot(
+            Math.max(b.x, state.width - b.x),
+            Math.max(b.y, state.height - b.y),
+          ) + 80;
         burstData[i * 4] = b.x;
         burstData[i * 4 + 1] = b.y;
         burstData[i * 4 + 2] = reach * Math.sin((k * Math.PI) / 2);
         burstData[i * 4 + 3] = 1 - k * k * k;
       });
 
-      if (state.presence > 0.002) state.trailUntil = now + s.linger * 1000 + 200;
+      if (state.presence > 0.002)
+        state.trailUntil = now + s.linger * 1000 + 200;
       drawMask(s, dt);
       brush.px = brush.x;
       brush.py = brush.y;
       const intro = drawView(s, now);
 
       const busy =
-        engaged || state.presence > 0.002 || bursts.length > 0 || now < state.trailUntil || (state.image && intro < 1);
+        engaged ||
+        state.presence > 0.002 ||
+        bursts.length > 0 ||
+        now < state.trailUntil ||
+        (state.image && intro < 1);
       if (busy) raf = requestAnimationFrame(frame);
       else last = 0;
     };
 
     const wake = () => {
-      if (!raf && alive && visible && !document.hidden) raf = requestAnimationFrame(frame);
+      if (!raf && alive && visible && !document.hidden)
+        raf = requestAnimationFrame(frame);
     };
 
     const image = new Image();
-    image.crossOrigin = 'anonymous';
-    image.decoding = 'async';
+    image.crossOrigin = "anonymous";
+    image.decoding = "async";
     image.onload = () => {
       if (!alive) return;
       gl.bindTexture(gl.TEXTURE_2D, imageTexture);
       gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        image,
+      );
       gl.generateMipmap(gl.TEXTURE_2D);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-      const sampler = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+      gl.texParameteri(
+        gl.TEXTURE_2D,
+        gl.TEXTURE_MIN_FILTER,
+        gl.LINEAR_MIPMAP_LINEAR,
+      );
+      const sampler = document
+        .createElement("canvas")
+        .getContext("2d", { willReadFrequently: true });
       if (sampler) {
         try {
           const edge = measureEdge(sampler, image);
@@ -732,13 +825,13 @@ const HalftoneReveal = ({
     };
     image.src = src;
 
-    const locatePointer = event => {
+    const locatePointer = (event) => {
       const rect = container.getBoundingClientRect();
       pointer.x = event.clientX - rect.left;
       pointer.y = event.clientY - rect.top;
       pointer.placed = true;
     };
-    const onMove = event => {
+    const onMove = (event) => {
       locatePointer(event);
       if (!pointer.inside) {
         pointer.inside = true;
@@ -750,9 +843,13 @@ const HalftoneReveal = ({
       pointer.inside = false;
       wake();
     };
-    const onDown = event => {
+    const onDown = (event) => {
       onMove(event);
-      if (!settingsRef.current.clickBurst || (event.pointerType === 'mouse' && event.button !== 0)) return;
+      if (
+        !settingsRef.current.clickBurst ||
+        (event.pointerType === "mouse" && event.button !== 0)
+      )
+        return;
       bursts.push({ x: pointer.x, y: pointer.y, start: performance.now() });
       if (bursts.length > MAX_BURSTS) bursts.shift();
     };
@@ -761,16 +858,16 @@ const HalftoneReveal = ({
       wake();
     };
 
-    container.addEventListener('pointermove', onMove, { passive: true });
-    container.addEventListener('pointerenter', onMove, { passive: true });
-    container.addEventListener('pointerdown', onDown, { passive: true });
-    container.addEventListener('pointerleave', onLeave, { passive: true });
-    container.addEventListener('pointercancel', onLeave, { passive: true });
-    document.addEventListener('visibilitychange', onVisibility);
+    container.addEventListener("pointermove", onMove, { passive: true });
+    container.addEventListener("pointerenter", onMove, { passive: true });
+    container.addEventListener("pointerdown", onDown, { passive: true });
+    container.addEventListener("pointerleave", onLeave, { passive: true });
+    container.addEventListener("pointercancel", onLeave, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
-    const intersection = new IntersectionObserver(entries => {
-      visible = entries.some(entry => entry.isIntersecting);
+    const intersection = new IntersectionObserver((entries) => {
+      visible = entries.some((entry) => entry.isIntersecting);
       if (visible) {
         last = 0;
         wake();
@@ -793,12 +890,12 @@ const HalftoneReveal = ({
       image.onload = null;
       resizeObserver.disconnect();
       intersection.disconnect();
-      container.removeEventListener('pointermove', onMove);
-      container.removeEventListener('pointerenter', onMove);
-      container.removeEventListener('pointerdown', onDown);
-      container.removeEventListener('pointerleave', onLeave);
-      container.removeEventListener('pointercancel', onLeave);
-      document.removeEventListener('visibilitychange', onVisibility);
+      container.removeEventListener("pointermove", onMove);
+      container.removeEventListener("pointerenter", onMove);
+      container.removeEventListener("pointerdown", onDown);
+      container.removeEventListener("pointerleave", onLeave);
+      container.removeEventListener("pointercancel", onLeave);
+      document.removeEventListener("visibilitychange", onVisibility);
       masks.forEach(destroyMask);
       gl.deleteTexture(imageTexture);
       gl.deleteBuffer(buffer);
@@ -815,10 +912,16 @@ const HalftoneReveal = ({
   return (
     <div
       ref={containerRef}
-      className={['relative h-full w-full overflow-hidden', className].filter(Boolean).join(' ')}
+      className={["relative h-full w-full overflow-hidden", className]
+        .filter(Boolean)
+        .join(" ")}
       style={style}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full" aria-hidden="true" />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 block h-full w-full"
+        aria-hidden="true"
+      />
     </div>
   );
 };

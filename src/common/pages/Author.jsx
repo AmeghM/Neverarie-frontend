@@ -74,7 +74,7 @@ function Author() {
 
         {/* Author profile */}
         <section className="px-6 py-20 sm:py-28 lg:py-32">
-          <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[0.85fr_1.15fr] md:items-center md:gap-16 lg:gap-24">
+          <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-[0.85fr_1.15fr] md:items-center md:gap-16 lg:gap-24">
             {/* Portrait */}
             <div className="mx-auto w-full max-w-sm">
               <div className="relative aspect-4/5 overflow-hidden rounded-2xl border border-white/10 bg-white/3">
@@ -122,7 +122,7 @@ function Author() {
 
         {/* Website vision */}
         <section className="px-6 pb-24 sm:pb-32">
-          <div className="mx-auto max-w-6xl border-t border-white/10 pt-12 sm:pt-16">
+          <div className="mx-auto max-w-5xl border-t border-white/10 pt-12 sm:pt-16">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#A78BFA]">
               The idea behind it
             </p>

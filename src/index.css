@@ -21,3 +21,25 @@ body {
     cursor: none !important;
   }
 }
+
+.animate-gradient {
+  display: inline-block;
+  background: linear-gradient(90deg, #8b5cf6 0%, #ffffff 20%, #ffffff 100%);
+  background-size: 200% 100%;
+  background-position: 0% center;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+.animate-gradient:hover {
+  animation: gradient-train 4s linear infinite;
+}
+
+@keyframes gradient-train {
+  from {
+    background-position: 200% center;
+  }
+  to {
+    background-position: -200% center;
+  }
+}
