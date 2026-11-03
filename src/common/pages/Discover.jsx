@@ -1,6 +1,7 @@
 import Header from "../../common/components/Header";
 import Footer from "../../common/components/Footer";
 import { SlidersHorizontal } from "lucide-react";
+import TestImage from "../../assets/media/books/ArtoriusCover.jpg";
 
 function Discover() {
   return (
@@ -29,85 +30,70 @@ function Discover() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 w-full mt-4">
           <div className="space-y-2 p-2 flex flex-col min-w-0">
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn7Frp8625gFHZjBVAKBPe0Da_p2Ev05GRjdTvC1AscA&s=10"
+              src={TestImage}
               alt=""
               className="w-full aspect-2/3 object-cover rounded-lg"
             />
-            <h2 className="text-white text-sm sm:text-md">
-              The Convenant of Water
-            </h2>
+            <h2 className="text-white text-sm sm:text-md">Artorius</h2>
+            <span className="text-white text-xs sm:text-sm">Rating</span>
+          </div>
+          <div className="space-y-2 p-2 flex flex-col min-w-0">
+            <img
+              src={TestImage}
+              alt=""
+              className="w-full aspect-2/3 object-cover rounded-lg"
+            />
+            <h2 className="text-white text-sm sm:text-md">Artorius</h2>
             <span className="text-white text-xs sm:text-sm">Rating</span>
           </div>
 
           <div className="space-y-2 p-2 flex flex-col min-w-0">
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn7Frp8625gFHZjBVAKBPe0Da_p2Ev05GRjdTvC1AscA&s=10"
+              src={TestImage}
               alt=""
               className="w-full aspect-2/3 object-cover rounded-lg"
             />
-            <h2 className="text-white text-sm sm:text-md">
-              The Convenant of Water
-            </h2>
+            <h2 className="text-white text-sm sm:text-md">Artorius</h2>
             <span className="text-white text-xs sm:text-sm">Rating</span>
           </div>
 
           <div className="space-y-2 p-2 flex flex-col min-w-0">
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn7Frp8625gFHZjBVAKBPe0Da_p2Ev05GRjdTvC1AscA&s=10"
+              src={TestImage}
               alt=""
               className="w-full aspect-2/3 object-cover rounded-lg"
             />
-            <h2 className="text-white text-sm sm:text-md">
-              The Convenant of Water
-            </h2>
+            <h2 className="text-white text-sm sm:text-md">Artorius</h2>
             <span className="text-white text-xs sm:text-sm">Rating</span>
           </div>
 
           <div className="space-y-2 p-2 flex flex-col min-w-0">
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn7Frp8625gFHZjBVAKBPe0Da_p2Ev05GRjdTvC1AscA&s=10"
+              src={TestImage}
               alt=""
               className="w-full aspect-2/3 object-cover rounded-lg"
             />
-            <h2 className="text-white text-sm sm:text-md">
-              The Convenant of Water
-            </h2>
+            <h2 className="text-white text-sm sm:text-md">Artorius</h2>
             <span className="text-white text-xs sm:text-sm">Rating</span>
           </div>
 
           <div className="space-y-2 p-2 flex flex-col min-w-0">
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn7Frp8625gFHZjBVAKBPe0Da_p2Ev05GRjdTvC1AscA&s=10"
+              src={TestImage}
               alt=""
               className="w-full aspect-2/3 object-cover rounded-lg"
             />
-            <h2 className="text-white text-sm sm:text-md">
-              The Convenant of Water
-            </h2>
+            <h2 className="text-white text-sm sm:text-md">Artorius</h2>
             <span className="text-white text-xs sm:text-sm">Rating</span>
           </div>
 
           <div className="space-y-2 p-2 flex flex-col min-w-0">
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn7Frp8625gFHZjBVAKBPe0Da_p2Ev05GRjdTvC1AscA&s=10"
+              src={TestImage}
               alt=""
               className="w-full aspect-2/3 object-cover rounded-lg"
             />
-            <h2 className="text-white text-sm sm:text-md">
-              The Convenant of Water
-            </h2>
-            <span className="text-white text-xs sm:text-sm">Rating</span>
-          </div>
-
-          <div className="space-y-2 p-2 flex flex-col min-w-0">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn7Frp8625gFHZjBVAKBPe0Da_p2Ev05GRjdTvC1AscA&s=10"
-              alt=""
-              className="w-full aspect-2/3 object-cover rounded-lg"
-            />
-            <h2 className="text-white text-sm sm:text-md">
-              The Convenant of Water
-            </h2>
+            <h2 className="text-white text-sm sm:text-md">Artorius</h2>
             <span className="text-white text-xs sm:text-sm">Rating</span>
           </div>
         </div>
