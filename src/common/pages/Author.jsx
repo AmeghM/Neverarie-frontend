@@ -1,6 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import GridMotion from "../../components/GridMotion";
+import AuthorImg from "../../assets/media/NeverarieAuthor.jpg";
 
 function Author() {
   const items = [
@@ -78,15 +79,8 @@ function Author() {
             {/* Portrait */}
             <div className="mx-auto w-full max-w-sm">
               <div className="relative aspect-4/5 overflow-hidden rounded-2xl border border-white/10 bg-white/3">
-                {/* Replace this with your portrait */}
-                {/* <div className="flex h-full items-center justify-center text-sm text-white/30">
-                  <img
-                    src="https://i.pinimg.com/236x/7f/ee/03/7fee03ee79f7bf0fa1d6dda1a7580587.jpg"
-                    alt=""
-                  />
-                </div> */}
                 <img
-                  src="https://i.pinimg.com/736x/f7/3f/e6/f73fe64250f8acedbec20a0831e0ede5.jpg"
+                  src={AuthorImg}
                   alt=""
                   className="w-full h-full p-3 rounded-2xl"
                 />
