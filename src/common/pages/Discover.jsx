@@ -128,7 +128,7 @@ function Discover() {
             <span className="text-gray-400 text-xs sm:text-xs">Eng</span>
           </Link>
           <Link
-            to="/artorius"
+            to="/book"
             className="space-y-1 p-2 flex flex-col min-w-0 relative group"
             onClick={(e) => {
               if (e.target.closest(".preview-card")) {
@@ -204,7 +204,7 @@ function Discover() {
 
                   <div className="flex items-center justify-between">
                     <Link
-                      to="/artorius"
+                      to="/book"
                       onClick={(e) => e.stopPropagation()}
                       className="px-4 py-3 bg-violet-500  rounded-3xl text-white text-xs font-semibold flex items-center gap-1"
                     >
