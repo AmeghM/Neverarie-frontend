@@ -29,11 +29,15 @@ function LandPage() {
                 Artorius
               </h1>
 
-              <p className="max-w-lg text-sm sm:text-base lg:text-lg leading-7 sm:leading-8 text-violet-100/70 text-left">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Debitis voluptas quaerat error provident temporibus iusto
-                molestias molestiae reprehenderit quod, architecto quia at nemo
-                eligendi laboriosam aspernatur modi unde aut consectetur.
+              <p className="max-w-lg text-sm sm:text-base lg:text-lg leading-7 sm:leading-8 text-violet-100/70 text-left line-clamp-4">
+                For ten thousand years, Artorius has done one thing: watched
+                over the damned. He is an Eidolon, a being made to oversee Hell,
+                and he has never questioned it. Then one memory he can't explain
+                begins to change him. Artorius is a dark fantasy epic in three
+                parts. It follows one being's long road from the Deep, through
+                the world of the living, to the gates of the Dawnreach, and asks
+                what a made thing becomes when it starts to want more than it
+                was made for.
               </p>
 
               <div className="flex flex-wrap items-center gap-4 pt-2">

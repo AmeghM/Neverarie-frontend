@@ -11,6 +11,7 @@ import Discover from "./common/pages/Discover";
 import Support from "./common/pages/Support";
 import Author from "./common/pages/Author";
 import Cursor from "./common/components/Cursor";
+import BookDetails from "./common/pages/BookDetails";
 
 function App() {
   const [loader, setLoader] = useState(false);
@@ -29,6 +30,8 @@ function App() {
         <Route path="/discover" element={<Discover />} />
         <Route path="/support" element={<Support />} />
         <Route path="/author" element={<Author />} />
+
+        <Route path="/book" element={<BookDetails />} />
 
         {/* admin */}
       </Routes>
