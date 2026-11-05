@@ -1,5 +1,15 @@
+import Footer from "../components/Footer";
+
 function Chapters() {
-  return <div>Chapters</div>;
+  return (
+    <>
+      <Headers />
+
+      <section></section>
+
+      <Footer />
+    </>
+  );
 }
 
 export default Chapters;

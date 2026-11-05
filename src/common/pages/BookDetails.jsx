@@ -25,7 +25,7 @@ function BookDetails() {
           {/* details */}
           <div className="sm:col-span-2 text-white space-y-3 min-w-0">
             <h1 className="text-4xl sm:text-6xl">Artorius</h1>
-            <p>Eng</p>
+            <p className="text-gray-400 text-sm">Eng</p>
             <p>⭐10</p>
             <div className="flex flex-wrap gap-2 text-gray-300 mb-2">
               <span className="px-2 py-1 border border-gray-600 rounded-3xl text-[0.65rem] inline-block">
