@@ -28,13 +28,13 @@ function BookDetails() {
             <p className="text-gray-400 text-sm">Eng</p>
             <p>⭐10</p>
             <div className="flex flex-wrap gap-2 text-gray-300 mb-2">
-              <span className="px-2 py-1 border border-gray-600 rounded-3xl text-[0.65rem] inline-block">
+              <span className="px-3 py-2 border border-gray-600 rounded-3xl text-[12px] inline-block">
                 Action
               </span>
-              <span className="px-2 py-1 border border-gray-600  rounded-3xl text-[0.65rem]  inline-block">
+              <span className="px-3 py-2 border border-gray-600  rounded-3xl text-[12px]  inline-block">
                 Adventure
               </span>
-              <span className="px-2 py-1 border border-gray-600 rounded-3xl text-[0.65rem]  inline-block">
+              <span className="px-3 py-2 border border-gray-600 rounded-3xl text-[12px]  inline-block">
                 Horror
               </span>
             </div>
@@ -90,7 +90,7 @@ function BookDetails() {
             </div>
             <div className="max-h-90 overflow-y-auto pr-1 space-y-2 scrollbar-thin scrollbar-thumb-gray-600">
               <Link
-                to="/book/artorius/chapter/10"
+                to="/chapter"
                 className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-700/30 hover:bg-violet-500/10 border border-transparent hover:border-violet-500/30 transition-all text-left group"
               >
                 <div className="w-10 h-10 shrink-0 rounded-lg bg-gray-700 flex group-hover:bg-violet-500/50 items-center justify-center font-semibold text-gray-200 transition-all">
@@ -116,7 +116,7 @@ function BookDetails() {
                 </div>
               </Link>
               <Link
-                to="/book/artorius/chapter/10"
+                to="/chapter"
                 className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-700/30 hover:bg-violet-500/10 border border-transparent hover:border-violet-500/30 transition-all text-left group"
               >
                 <div className="w-10 h-10 shrink-0 rounded-lg bg-gray-700 flex group-hover:bg-violet-500/50 items-center justify-center font-semibold text-gray-200 transition-all">

@@ -12,6 +12,11 @@ import Support from "./common/pages/Support";
 import Author from "./common/pages/Author";
 import Cursor from "./common/components/Cursor";
 import BookDetails from "./common/pages/BookDetails";
+import Chapters from "./common/pages/Chapters";
+import AdminDash from "./admin/pages/AdminDash";
+import AdminBooks from "./admin/pages/AdminBooks";
+import AdminChapters from "./admin/pages/AdminChapters";
+import AdminSettings from "./admin/pages/AdminSettings";
 
 function App() {
   const [loader, setLoader] = useState(false);
@@ -32,8 +37,13 @@ function App() {
         <Route path="/author" element={<Author />} />
 
         <Route path="/book" element={<BookDetails />} />
+        <Route path="/chapter" element={<Chapters />} />
 
         {/* admin */}
+        <Route path="/admindash" element={<AdminDash />} />
+        <Route path="/admin/books" element={<AdminBooks />} />
+        <Route path="/admin/chapters" element={<AdminChapters />} />
+        <Route path="/admin/settings" element={<AdminSettings />} />
       </Routes>
     </>
   );
