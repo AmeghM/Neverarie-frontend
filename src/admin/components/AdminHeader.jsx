@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   Menu,
   ExternalLink,
-  UserRound,
   Pencil,
   LogOut,
   ChevronDown,
@@ -68,7 +67,7 @@ function AdminHeader({ onMenuClick, onLogout }) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-white/[0.08] bg-[#09090B]/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
+    <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-white/8 bg-[#09090B]/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
       {/* Left section */}
       <div className="flex items-center gap-4">
         <button
@@ -108,7 +107,7 @@ function AdminHeader({ onMenuClick, onLogout }) {
             className={`flex items-center gap-2 rounded-xl border p-1.5 transition ${
               profileOpen
                 ? "border-[#8B5CF6]/50 bg-[#8B5CF6]/10"
-                : "border-transparent hover:border-white/10 hover:bg-white/[0.05]"
+                : "border-transparent hover:border-white/10 hover:bg-white/5"
             }`}
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/15 text-sm font-bold text-[#C4B5FD]">
@@ -127,7 +126,7 @@ function AdminHeader({ onMenuClick, onLogout }) {
           {profileOpen && (
             <div className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-xl border border-white/10 bg-[#18181B] shadow-2xl shadow-black/40">
               {/* Profile information */}
-              <div className="border-b border-white/[0.08] p-4">
+              <div className="border-b border-white/8 p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#8B5CF6]/20 font-bold text-[#C4B5FD]">
                     A
@@ -146,7 +145,7 @@ function AdminHeader({ onMenuClick, onLogout }) {
               <div className="p-2">
                 <button
                   onClick={handleEditProfile}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-300 transition hover:bg-white/[0.06] hover:text-white"
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-300 transition hover:bg-white/6 hover:text-white"
                 >
                   <Pencil size={17} />
                   Edit Profile
@@ -157,13 +156,13 @@ function AdminHeader({ onMenuClick, onLogout }) {
                     setProfileOpen(false);
                     navigate("/admin/settings");
                   }}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-300 transition hover:bg-white/[0.06] hover:text-white"
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-300 transition hover:bg-white/6 hover:text-white"
                 >
                   <Settings size={17} />
                   Settings
                 </button>
 
-                <div className="my-2 border-t border-white/[0.08]" />
+                <div className="my-2 border-t border-white/8" />
 
                 <button
                   onClick={handleLogout}

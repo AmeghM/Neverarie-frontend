@@ -46,7 +46,7 @@ function AdminSidebar({ isOpen, onClose, onLogout }) {
 
       <aside
         className={`fixed left-0 top-0 z-50 flex h-screen w-72
-        flex-col border-r border-white/[0.08] bg-[#111113]
+        flex-col border-r border-white/8 bg-[#111113]
         transition-transform duration-300
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}
@@ -78,7 +78,7 @@ function AdminSidebar({ isOpen, onClose, onLogout }) {
           </button>
         </div>
 
-        <div className="mx-5 border-t border-white/[0.08]" />
+        <div className="mx-5 border-t border-white/8" />
 
         {/* Navigation */}
         <nav className="flex-1 space-y-2 px-4 py-7">
@@ -104,7 +104,7 @@ function AdminSidebar({ isOpen, onClose, onLogout }) {
                   ${
                     isActive
                       ? "bg-[#8B5CF6]/15 text-[#A78BFA]"
-                      : "text-gray-400 hover:bg-white/[0.05] hover:text-white"
+                      : "text-gray-400 hover:bg-white/5 hover:text-white"
                   }`
                 }
               >
@@ -124,7 +124,7 @@ function AdminSidebar({ isOpen, onClose, onLogout }) {
         </nav>
 
         {/* Bottom section */}
-        <div className="border-t border-white/[0.08] p-4">
+        <div className="border-t border-white/8 p-4">
           <a
             href="/"
             target="_blank"
@@ -139,7 +139,7 @@ function AdminSidebar({ isOpen, onClose, onLogout }) {
 
           <div
             className="mt-4 flex items-center gap-3
-            rounded-xl bg-white/[0.04] p-3"
+            rounded-xl bg-white/04 p-3"
           >
             <div
               className="flex h-10 w-10 items-center
