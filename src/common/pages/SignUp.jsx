@@ -1,9 +1,53 @@
 import Balatro from "../../components/Balatro";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { registerAPI } from "../../services/allAPI";
 
 function SignUp() {
+  const [viewPass, setViewPass] = useState(false);
+
+  const [userDetails, setUserDetails] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  console.log(userDetails);
+  const navigate = useNavigate();
+
+  const HandleRegister = async () => {
+    const { username, email, password } = userDetails;
+    if (!username || !email || !password) {
+      alert("Fill the details completely");
+    } else {
+      const result = await registerAPI(userDetails);
+      console.log(result);
+      if (result.status == 200) {
+        alert("Registered successfully");
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+        });
+        navigate("/login");
+      } else if (result.status == 404) {
+        alert(result.response.data);
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+        });
+      } else {
+        alert("something went wrong");
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+        });
+      }
+    }
+  };
   return (
     <>
       <div className="min-h-screen  w-full relative overflow-hidden bg-black">
@@ -78,6 +122,10 @@ function SignUp() {
                 <input
                   type="text"
                   placeholder="Enter username"
+                  value={userDetails?.username}
+                  onChange={(e) =>
+                    setUserDetails({ ...userDetails, username: e.target.value })
+                  }
                   required
                   className="w-full min-w-0 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base text-white outline-none placeholder:text-white/40 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
                 />
@@ -92,6 +140,10 @@ function SignUp() {
                 <input
                   type="email"
                   placeholder="you@example.com"
+                  value={userDetails?.email}
+                  onChange={(e) =>
+                    setUserDetails({ ...userDetails, email: e.target.value })
+                  }
                   required
                   className="w-full min-w-0 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base text-white outline-none placeholder:text-white/40 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
                 />
@@ -106,24 +158,41 @@ function SignUp() {
                 <div className="relative">
                   <input
                     id="password"
-                    type="password"
+                    type={!viewPass ? "password" : "text"}
                     placeholder="Enter your password"
                     autoComplete="current-password"
+                    value={userDetails?.password}
+                    onChange={(e) =>
+                      setUserDetails({
+                        ...userDetails,
+                        password: e.target.value,
+                      })
+                    }
                     required
                     className="w-full min-w-0 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base text-white outline-none placeholder:text-white/40 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
                   />
-                  <button className="absolute inset-y-0 right-0 flex items-center px-4 text-white/40 transition hover:text-white focus:outline-none">
-                    <Eye />
-                    <EyeOff />
+                  <button
+                    onClick={() => setViewPass((prev) => !prev)}
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center px-4 text-white/40 transition hover:text-white focus:outline-none"
+                    aria-label={!viewPass ? "Hide password" : "Show password"}
+                  >
+                    {!viewPass ? <EyeOff /> : <Eye />}
+
+                    {/* <Eye />
+                    <EyeOff /> */}
                   </button>
                 </div>
-                <p className="mt-1.5 text-xs text-red-400/55">
-                  Use at least 8 characters.
-                </p>
+                {userDetails.password.length < 8 && (
+                  <p className="mt-1.5 text-xs text-red-400/55">
+                    Use at least 8 characters.
+                  </p>
+                )}
               </div>
 
               <button
                 type="button"
+                onClick={HandleRegister}
                 className="w-full rounded-xl bg-[#8B5CF6] px-4 py-3 font-semibold text-white transition hover:bg-[#a27df8] focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-black"
               >
                 Create Account

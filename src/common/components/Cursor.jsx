@@ -6,6 +6,9 @@ function Cursor() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // Disable custom cursor on admin pages
+    if (window.location.pathname.startsWith("/admin")) return;
+
     // Don't use custom cursor on touch devices
     if (window.matchMedia("(pointer: coarse)").matches) return;
 

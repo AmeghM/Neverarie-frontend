@@ -15,11 +15,18 @@ body {
   background-color: #222;
 }
 
+/* Hide normal cursor only on the user-facing website */
 @media (pointer: fine) {
-  body,
-  body * {
+  body:not(.admin-page),
+  body:not(.admin-page) * {
     cursor: none !important;
   }
+}
+
+/* Always show normal cursor on admin pages */
+body.admin-page,
+body.admin-page * {
+  cursor: auto !important;
 }
 
 .animate-gradient {

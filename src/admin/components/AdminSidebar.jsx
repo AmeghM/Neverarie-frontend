@@ -14,7 +14,7 @@ function AdminSidebar({ isOpen, onClose, onLogout }) {
   const navItems = [
     {
       name: "Dashboard",
-      path: "/admindash",
+      path: "/admin/dash",
       icon: LayoutDashboard,
       end: true,
     },

@@ -1,8 +1,52 @@
 import Balatro from "../../components/Balatro";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { loginAPI } from "../../services/allAPI";
 
 function Login() {
+  const [userDetails, setUserDetails] = useState({
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    const { email, password } = userDetails;
+
+    if (!email || !password) {
+      alert("Fill the details!");
+    } else {
+      try {
+        const result = await loginAPI(userDetails);
+        if (result.status == 200) {
+          setUserDetails({
+            email: "",
+            password: "",
+          });
+          navigate("/");
+          alert("login successfully");
+        } else if (result.status == 404) {
+          alert(result.response.data);
+          setUserDetails({
+            email: "",
+            password: "",
+          });
+        } else if (result.status == 401) {
+          alert(result.response.data);
+        } else {
+          alert("Something went wrong");
+          setUserDetails({
+            email: "",
+            password: "",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   return (
     <>
       <div className="min-h-screen  w-full relative overflow-hidden bg-black">
@@ -78,6 +122,10 @@ function Login() {
                   type="text"
                   placeholder="you@example.com"
                   required
+                  value={userDetails?.email}
+                  onChange={(e) =>
+                    setUserDetails({ ...userDetails, email: e.target.value })
+                  }
                   className="w-full min-w-0 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base text-white outline-none placeholder:text-white/40 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
                 />
               </div>
@@ -94,6 +142,10 @@ function Login() {
                   placeholder="Enter your password"
                   autoComplete="current-password"
                   required
+                  value={userDetails?.password}
+                  onChange={(e) =>
+                    setUserDetails({ ...userDetails, password: e.target.value })
+                  }
                   className="w-full min-w-0 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base text-white outline-none placeholder:text-white/40 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
                 />
               </div>
@@ -108,7 +160,8 @@ function Login() {
               </div>
 
               <button
-                type="submit"
+                type="button"
+                onClick={handleLogin}
                 className="w-full rounded-xl bg-[#8B5CF6] px-4 py-3 font-semibold text-white transition hover:bg-[#a27df8] focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-black"
               >
                 Login
