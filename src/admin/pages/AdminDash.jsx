@@ -14,10 +14,20 @@ import {
 
 import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
+import { useNavigate } from "react-router-dom";
+import { getAdminChaptersAPI, getAllBooksAPI } from "../../services/allAPI";
 
 function AdminDash() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [time, setTime] = useState(new Date());
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    navigate("/login", { replace: true });
+  };
 
   // Live clock
   useEffect(() => {
@@ -43,32 +53,32 @@ function AdminDash() {
   });
 
   // Dashboard statistics
-  const stats = [
+  const [stats, setStats] = useState([
     {
       title: "Total Books",
-      value: "10",
+      value: 0,
       description: "Books in your library",
       icon: BookOpen,
     },
     {
       title: "Total Chapters",
-      value: "86",
+      value: 0,
       description: "Across all books",
       icon: Library,
     },
     {
       title: "Published",
-      value: "72",
+      value: 0,
       description: "Available to readers",
       icon: CheckCircle2,
     },
     {
       title: "Scheduled",
-      value: "4",
+      value: 0,
       description: "Upcoming publications",
       icon: CalendarClock,
     },
-  ];
+  ]);
 
   const quickActions = [
     {
@@ -92,6 +102,73 @@ function AdminDash() {
       icon: Upload,
     },
   ];
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        const response = await getAllBooksAPI();
+
+        if (response.status === 200) {
+          const books = response.data.books;
+
+          let totalChapters = 0;
+          let published = 0;
+          let scheduled = 0;
+
+          // Fetch chapters for every book
+          const chapterResponses = await Promise.all(
+            books.map((book) => getAdminChaptersAPI(book._id)),
+          );
+
+          chapterResponses.forEach((res) => {
+            if (res.status === 200) {
+              const chapters = res.data.chapters;
+
+              totalChapters += chapters.length;
+
+              published += chapters.filter(
+                (chapter) => chapter.status === "Published",
+              ).length;
+
+              scheduled += chapters.filter(
+                (chapter) => chapter.status === "Scheduled",
+              ).length;
+            }
+          });
+
+          setStats([
+            {
+              title: "Total Books",
+              value: books.length,
+              description: "Books in your library",
+              icon: BookOpen,
+            },
+            {
+              title: "Total Chapters",
+              value: totalChapters,
+              description: "Across all books",
+              icon: Library,
+            },
+            {
+              title: "Published",
+              value: published,
+              description: "Available to readers",
+              icon: CheckCircle2,
+            },
+            {
+              title: "Scheduled",
+              value: scheduled,
+              description: "Upcoming publications",
+              icon: CalendarClock,
+            },
+          ]);
+        }
+      } catch (error) {
+        console.error("Dashboard stats error:", error);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#09090B] text-white">
@@ -99,12 +176,16 @@ function AdminDash() {
       <AdminSidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        onLogout={handleLogout}
       />
 
       {/* Main content */}
       <div className="min-h-screen lg:pl-72">
         {/* Header */}
-        <AdminHeader onMenuClick={() => setSidebarOpen(true)} />
+        <AdminHeader
+          onMenuClick={() => setSidebarOpen(true)}
+          onLogout={handleLogout}
+        />
 
         <main className="p-4 sm:p-7 lg:p-10 space-y-8">
           {/* Welcome section */}
@@ -127,7 +208,10 @@ function AdminDash() {
                   publishing platform up to date.
                 </p>
 
-                <button className="mt-6 flex items-center gap-2 rounded-lg bg-[#8B5CF6] px-5 py-3 text-sm font-medium transition hover:bg-[#7C3AED]">
+                <button
+                  onClick={() => navigate("/admin/books/add")}
+                  className="mt-6 flex items-center gap-2 rounded-lg bg-[#8B5CF6] px-5 py-3 text-sm font-medium transition hover:bg-[#7C3AED]"
+                >
                   <Plus size={18} />
                   Add New Book
                 </button>

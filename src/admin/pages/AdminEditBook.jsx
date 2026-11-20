@@ -5,43 +5,45 @@ import { Pencil } from "lucide-react";
 import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
 import BookForm from "../components/BookForm";
+import { getBookByIdAPI, updateBookAPI } from "../../services/allAPI";
+import { useEffect } from "react";
 
 // Static sample book data
-const sampleBooks = [
-  {
-    id: "book-1",
-    title: "Shadow Reborn",
-    description:
-      "A young warrior awakens in a world where shadows hold unimaginable power. Follow his journey as he discovers his true destiny.",
-    author: "Zlac",
-    genre: "Action",
-    tags: ["Fantasy", "Adventure", "Action"],
-    status: "Published",
-    coverImage: "",
-  },
-  {
-    id: "book-2",
-    title: "The Last Horizon",
-    description:
-      "An adventure beyond the known world, where every discovery brings a new mystery.",
-    author: "Zlac",
-    genre: "Adventure",
-    tags: ["Adventure", "Mystery", "Fantasy"],
-    status: "Published",
-    coverImage: "",
-  },
-  {
-    id: "book-3",
-    title: "Crimson Fate",
-    description:
-      "A story of destiny, betrayal, and an unexpected power that could change everything.",
-    author: "Zlac",
-    genre: "Fantasy",
-    tags: ["Fantasy", "Drama", "Action"],
-    status: "Draft",
-    coverImage: "",
-  },
-];
+// const sampleBooks = [
+//   {
+//     id: "book-1",
+//     title: "Shadow Reborn",
+//     description:
+//       "A young warrior awakens in a world where shadows hold unimaginable power. Follow his journey as he discovers his true destiny.",
+//     author: "Zlac",
+//     genre: "Action",
+//     tags: ["Fantasy", "Adventure", "Action"],
+//     status: "Published",
+//     coverImage: "",
+//   },
+//   {
+//     id: "book-2",
+//     title: "The Last Horizon",
+//     description:
+//       "An adventure beyond the known world, where every discovery brings a new mystery.",
+//     author: "Zlac",
+//     genre: "Adventure",
+//     tags: ["Adventure", "Mystery", "Fantasy"],
+//     status: "Published",
+//     coverImage: "",
+//   },
+//   {
+//     id: "book-3",
+//     title: "Crimson Fate",
+//     description:
+//       "A story of destiny, betrayal, and an unexpected power that could change everything.",
+//     author: "Zlac",
+//     genre: "Fantasy",
+//     tags: ["Fantasy", "Drama", "Action"],
+//     status: "Draft",
+//     coverImage: "",
+//   },
+// ];
 
 function AdminEditBook() {
   const { id } = useParams();
@@ -49,22 +51,47 @@ function AdminEditBook() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+  const [book, setBook] = useState(null);
 
   // Find the selected book using its URL ID
-  const book = sampleBooks.find((item) => item.id === id);
+  // const book = sampleBooks.find((item) => item.id === id);
+
+  const getBookDetails = async () => {
+    try {
+      setFetching(true);
+      const res = await getBookByIdAPI(id);
+      if (res.data.success) {
+        setBook(res.data.book);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setFetching(false);
+    }
+  };
+  useEffect(() => {
+    getBookDetails();
+  }, [id]);
 
   // Handle book update (frontend only)
-  const handleUpdateBook = (bookData) => {
-    setLoading(true);
+  const handleUpdateBook = async (bookData) => {
+    try {
+      setLoading(true);
 
-    // Simulate update action
-    setTimeout(() => {
+      const res = await updateBookAPI(id, bookData);
+
+      if (res.data.success) {
+        alert("Book updated successfully!");
+        navigate("/admin/books");
+      }
+    } catch (error) {
+      console.error(error);
+
+      alert(error.response?.data?.message || "Failed to update book");
+    } finally {
       setLoading(false);
-
-      alert("Book updated successfully!");
-
-      navigate("/admin/books");
-    }, 800);
+    }
   };
 
   return (

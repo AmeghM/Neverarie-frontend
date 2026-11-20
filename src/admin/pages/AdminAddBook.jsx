@@ -5,6 +5,7 @@ import { Plus, BookOpen } from "lucide-react";
 import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
 import BookForm from "../components/BookForm";
+import { addBookAPI } from "../../services/allAPI";
 
 function AdminAddBook() {
   const navigate = useNavigate();
@@ -18,36 +19,25 @@ function AdminAddBook() {
   const handleAddBook = async (bookData) => {
     try {
       setLoading(true);
+      const res = await addBookAPI(bookData);
 
-      const response = await fetch("/api/books", {
-        method: "POST",
-        body: bookData,
-        credentials: "include",
-      });
+      if (res.data.success) {
+        const createdBook = res.data.book;
 
-      const data = await response.json();
+        const bookId = createdBook?._id;
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create book");
-      }
+        if (!bookId) {
+          throw new Error("Book ID was not returned by the server.");
+        }
 
-      // Get the newly created book
-      const createdBook = data.book || data;
-      const bookId = createdBook._id || createdBook.id;
+        alert("Book created successfully!");
 
-      if (!bookId) {
-        throw new Error(
-          "Book created, but its ID was not returned by the server.",
-        );
-      }
-
-      alert("Book created successfully!");
-
-      // Redirect based on user's choice
-      if (addFirstChapter) {
-        navigate(`/admin/chapters/${bookId}/add`);
-      } else {
-        navigate("/admin/books");
+        // Redirect based on user's choice
+        if (addFirstChapter) {
+          navigate(`/admin/chapters/${bookId}/add`);
+        } else {
+          navigate("/admin/books");
+        }
       }
     } catch (error) {
       alert(error.message || "Something went wrong");
@@ -103,7 +93,7 @@ function AdminAddBook() {
             </div>
 
             {/* Optional first chapter option */}
-            <div className="mb-6 rounded-2xl border border-white/[0.08] bg-[#111114] p-5 sm:p-6">
+            <div className="mb-6 rounded-2xl border border-white/0.08 bg-[#111114] p-5 sm:p-6">
               <label className="flex cursor-pointer items-start gap-4">
                 <input
                   type="checkbox"

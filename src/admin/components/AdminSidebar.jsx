@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   BookOpen,
@@ -34,6 +34,8 @@ function AdminSidebar({ isOpen, onClose, onLogout }) {
       icon: Settings,
     },
   ];
+  const navigate = useNavigate();
+
   return (
     <>
       {/* Mobile overlay */}

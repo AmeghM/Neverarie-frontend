@@ -61,11 +61,6 @@ function AdminHeader({ onMenuClick, onLogout }) {
     navigate("/admin/settings");
   };
 
-  const handleLogout = () => {
-    setProfileOpen(false);
-    onLogout?.();
-  };
-
   return (
     <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-white/8 bg-[#09090B]/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
       {/* Left section */}
@@ -165,7 +160,10 @@ function AdminHeader({ onMenuClick, onLogout }) {
                 <div className="my-2 border-t border-white/8" />
 
                 <button
-                  onClick={handleLogout}
+                  onClick={() => {
+                    setProfileOpen(false);
+                    onLogout();
+                  }}
                   className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-red-400 transition hover:bg-red-500/10"
                 >
                   <LogOut size={17} />

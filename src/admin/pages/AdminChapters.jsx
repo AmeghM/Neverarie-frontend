@@ -5,17 +5,16 @@ import {
   Search,
   BookOpen,
   Layers,
-  CheckCircle2,
-  FileEdit,
-  CalendarClock,
   ArrowUpRight,
+  Eye,
   Filter,
   Plus,
-  Library,
 } from "lucide-react";
 
 import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
+import { useEffect } from "react";
+import { getAllBooksAPI } from "../../services/allAPI";
 
 function AdminChapters() {
   const navigate = useNavigate();
@@ -24,57 +23,31 @@ function AdminChapters() {
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
 
-  // Sample book data - replace with MongoDB data later
-  const [books] = useState([
-    {
-      id: "book-1",
-      title: "Shadow Reborn",
-      description: "A story of darkness, power and a new beginning.",
-      status: "Published",
-      totalChapters: 4,
-      publishedChapters: 2,
-      draftChapters: 1,
-      scheduledChapters: 1,
-      updated: "Nov 09, 2026",
-      coverColor: "from-purple-900 to-indigo-950",
-    },
-    {
-      id: "book-2",
-      title: "Crimson World",
-      description: "A world where blood determines destiny.",
-      status: "Published",
-      totalChapters: 1,
-      publishedChapters: 1,
-      draftChapters: 0,
-      scheduledChapters: 0,
-      updated: "Oct 28, 2026",
-      coverColor: "from-red-950 to-orange-950",
-    },
-    {
-      id: "book-3",
-      title: "The Last Hunter",
-      description: "The final hunter faces an unknown enemy.",
-      status: "Published",
-      totalChapters: 0,
-      publishedChapters: 0,
-      draftChapters: 0,
-      scheduledChapters: 0,
-      updated: "Nov 06, 2026",
-      coverColor: "from-blue-950 to-slate-950",
-    },
-    {
-      id: "book-4",
-      title: "Beyond The Void",
-      description: "An adventure beyond the limits of reality.",
-      status: "Draft",
-      totalChapters: 0,
-      publishedChapters: 0,
-      draftChapters: 0,
-      scheduledChapters: 0,
-      updated: "Nov 08, 2026",
-      coverColor: "from-emerald-950 to-teal-950",
-    },
-  ]);
+  const [books, setBooks] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await getAllBooksAPI();
+      setBooks(res.data.books || []);
+    } catch (error) {
+      console.log("Books fetch error: ", error);
+      setError(
+        error.response?.data?.message || "Failed to fetch books. Try again",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
 
   // Search and filter books
   const filteredBooks = useMemo(() => {
@@ -123,7 +96,7 @@ function AdminChapters() {
   };
 
   const handleManageChapters = (bookId) => {
-    navigate(`/admin/chapters/${bookId}`);
+    navigate(`/admin/books/${bookId}/chapters`);
   };
 
   return (
@@ -162,7 +135,7 @@ function AdminChapters() {
                 onClick={() => navigate("/admin/books")}
                 className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#111114] px-5 py-3 text-sm font-semibold text-white transition hover:border-[#8B5CF6]/40 hover:bg-[#8B5CF6]/10"
               >
-                <Plus size={18} />
+                <Eye size={18} />
                 View Books
               </button>
             </div>
@@ -220,12 +193,12 @@ function AdminChapters() {
                 <div className="grid grid-cols-1 gap-5 p-5 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">
                   {filteredBooks.map((book) => (
                     <div
-                      key={book.id}
-                      className="group overflow-hidden rounded-2xl border border-white/[0.08] bg-[#09090B] transition duration-300 hover:-translate-y-1 hover:border-[#8B5CF6]/40"
+                      key={book._id}
+                      className="group overflow-hidden rounded-2xl border border-white/8 bg-[#09090B] transition duration-300 hover:-translate-y-1 hover:border-[#8B5CF6]/40"
                     >
                       {/* Book cover */}
                       <div
-                        className={`relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br ${book.coverColor}`}
+                        className={`relative flex h-40 items-center justify-center overflow-hidden bg-linear-to-br from-purple-950 to-indigo-950`}
                       >
                         <div className="absolute inset-0 bg-black/20" />
 
@@ -318,7 +291,7 @@ function AdminChapters() {
 
                         {/* Manage chapters button */}
                         <button
-                          onClick={() => handleManageChapters(book.id)}
+                          onClick={() => handleManageChapters(book._id)}
                           className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#8B5CF6]/10 px-4 py-3 text-sm font-semibold text-[#A78BFA] transition hover:bg-[#8B5CF6] hover:text-white"
                         >
                           Manage Chapters
@@ -381,7 +354,7 @@ function StatCard({ title, value, icon: Icon, color }) {
   };
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-[#111114] p-4 sm:p-5">
+    <div className="rounded-2xl border border-white/8 bg-[#111114] p-4 sm:p-5">
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs text-gray-500 sm:text-sm">{title}</p>
 

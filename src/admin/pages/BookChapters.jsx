@@ -16,87 +16,89 @@ import {
 
 import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
+import { deleteChapterAPI, getAdminChaptersAPI } from "../../services/allAPI";
+import { useEffect } from "react";
 
 // Static sample book and chapter data
-const sampleBooks = [
-  {
-    id: "book-1",
-    title: "Shadow Reborn",
-    status: "Published",
-    description:
-      "A young warrior awakens in a world where shadows hold unimaginable power.",
-    coverImage: "",
-    chapters: [
-      {
-        id: "ch-1",
-        chapterNumber: 1,
-        title: "The Beginning",
-        status: "Published",
-        pages: ["page1.jpg", "page2.jpg", "page3.jpg"],
-        updatedAt: "2026-11-05",
-      },
-      {
-        id: "ch-2",
-        chapterNumber: 2,
-        title: "The Awakening",
-        status: "Published",
-        pages: ["page1.jpg", "page2.jpg"],
-        updatedAt: "2026-11-06",
-      },
-      {
-        id: "ch-3",
-        chapterNumber: 3,
-        title: "A New Enemy",
-        status: "Draft",
-        pages: ["page1.jpg", "page2.jpg", "page3.jpg", "page4.jpg"],
-        updatedAt: "2026-11-08",
-      },
-      {
-        id: "ch-4",
-        chapterNumber: 4,
-        title: "The Final Battle",
-        status: "Scheduled",
-        pages: ["page1.jpg", "page2.jpg"],
-        updatedAt: "2026-11-09",
-        scheduledAt: "2026-11-15",
-      },
-    ],
-  },
-  {
-    id: "book-2",
-    title: "The Last Horizon",
-    status: "Published",
-    description:
-      "An adventure beyond the known world, where every discovery brings a new mystery.",
-    coverImage: "",
-    chapters: [
-      {
-        id: "ch-5",
-        chapterNumber: 1,
-        title: "Lost World",
-        status: "Published",
-        pages: ["page1.jpg", "page2.jpg"],
-        updatedAt: "2026-11-04",
-      },
-      {
-        id: "ch-6",
-        chapterNumber: 2,
-        title: "The Journey",
-        status: "Draft",
-        pages: ["page1.jpg", "page2.jpg", "page3.jpg"],
-        updatedAt: "2026-11-07",
-      },
-    ],
-  },
-  {
-    id: "book-3",
-    title: "Crimson Fate",
-    status: "Draft",
-    description: "A story of destiny, betrayal, and an unexpected power.",
-    coverImage: "",
-    chapters: [],
-  },
-];
+// const sampleBooks = [
+//   {
+//     id: "book-1",
+//     title: "Shadow Reborn",
+//     status: "Published",
+//     description:
+//       "A young warrior awakens in a world where shadows hold unimaginable power.",
+//     coverImage: "",
+//     chapters: [
+//       {
+//         id: "ch-1",
+//         chapterNumber: 1,
+//         title: "The Beginning",
+//         status: "Published",
+//         pages: ["page1.jpg", "page2.jpg", "page3.jpg"],
+//         updatedAt: "2026-11-05",
+//       },
+//       {
+//         id: "ch-2",
+//         chapterNumber: 2,
+//         title: "The Awakening",
+//         status: "Published",
+//         pages: ["page1.jpg", "page2.jpg"],
+//         updatedAt: "2026-11-06",
+//       },
+//       {
+//         id: "ch-3",
+//         chapterNumber: 3,
+//         title: "A New Enemy",
+//         status: "Draft",
+//         pages: ["page1.jpg", "page2.jpg", "page3.jpg", "page4.jpg"],
+//         updatedAt: "2026-11-08",
+//       },
+//       {
+//         id: "ch-4",
+//         chapterNumber: 4,
+//         title: "The Final Battle",
+//         status: "Scheduled",
+//         pages: ["page1.jpg", "page2.jpg"],
+//         updatedAt: "2026-11-09",
+//         scheduledAt: "2026-11-15",
+//       },
+//     ],
+//   },
+//   {
+//     id: "book-2",
+//     title: "The Last Horizon",
+//     status: "Published",
+//     description:
+//       "An adventure beyond the known world, where every discovery brings a new mystery.",
+//     coverImage: "",
+//     chapters: [
+//       {
+//         id: "ch-5",
+//         chapterNumber: 1,
+//         title: "Lost World",
+//         status: "Published",
+//         pages: ["page1.jpg", "page2.jpg"],
+//         updatedAt: "2026-11-04",
+//       },
+//       {
+//         id: "ch-6",
+//         chapterNumber: 2,
+//         title: "The Journey",
+//         status: "Draft",
+//         pages: ["page1.jpg", "page2.jpg", "page3.jpg"],
+//         updatedAt: "2026-11-07",
+//       },
+//     ],
+//   },
+//   {
+//     id: "book-3",
+//     title: "Crimson Fate",
+//     status: "Draft",
+//     description: "A story of destiny, betrayal, and an unexpected power.",
+//     coverImage: "",
+//     chapters: [],
+//   },
+// ];
 
 function BookChapters() {
   const navigate = useNavigate();
@@ -104,15 +106,36 @@ function BookChapters() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Get the selected book using its URL ID
-  const [book, setBook] = useState(() =>
-    sampleBooks.find((item) => item.id === bookId),
-  );
+  const [book, setBook] = useState(null);
+  const [chapters, setChapters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Local chapter state
-  const [chapters, setChapters] = useState(
-    () => sampleBooks.find((item) => item.id === bookId)?.chapters || [],
-  );
+  const fetchChapters = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await getAdminChaptersAPI(bookId);
+      setBook(res.data.book);
+      setChapters(res.data.chapters || []);
+    } catch (error) {
+      console.log("Chapter fetch error:", error);
+      setBook(null);
+      setChapters([]);
+      setError(
+        error.response?.data?.message ||
+          "Failed to fetch chapters. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (bookId) {
+      fetchChapters();
+    }
+  }, [bookId]);
 
   // Statistics
   const publishedCount = chapters.filter(
@@ -128,18 +151,25 @@ function BookChapters() {
   ).length;
 
   // Delete chapter (frontend only)
-  const handleDeleteChapter = (chapterId) => {
+  const handleDeleteChapter = async (chapterId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this chapter?",
     );
 
     if (!confirmed) return;
-
-    setChapters((previous) =>
-      previous.filter((chapter) => chapter.id !== chapterId),
-    );
-
-    alert("Chapter deleted successfully!");
+    try {
+      const res = await deleteChapterAPI(chapterId);
+      if (!res.data.success) {
+        throw new Error(res.data.message || "Failed to delete chapter");
+      }
+      setChapters((prev) =>
+        prev.filter((chapter) => chapter._id !== chapterId),
+      );
+      alert("Chapter deleted successfully!");
+    } catch (error) {
+      console.error("delete chapter error:", error);
+      alert("something went wrong");
+    }
   };
 
   // Status styling
@@ -170,11 +200,20 @@ function BookChapters() {
     });
   };
 
-  // Book not found
-  if (!book) {
+  if (loading) {
     return (
       <AdminLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
-        <div className="rounded-2xl border border-white/[0.08] bg-[#111114] p-8 text-center">
+        <div className="flex justify-center py-24">
+          <div className="h-9 w-9 animate-spin rounded-full border-2 border-[#8B5CF6] border-t-transparent" />
+        </div>
+      </AdminLayout>
+    );
+  }
+  // Book not found
+  if (error || !book) {
+    return (
+      <AdminLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
+        <div className="rounded-2xl border border-white/8 bg-[#111114] p-8 text-center">
           <BookOpen size={35} className="mx-auto mb-4 text-[#A78BFA]" />
 
           <h2 className="text-lg font-semibold">Book not found</h2>
@@ -231,7 +270,7 @@ function BookChapters() {
           </div>
 
           <button
-            onClick={() => navigate(`/admin/chapters/${bookId}/add`)}
+            onClick={() => navigate(`/admin/books/${bookId}/chapters/add`)}
             className="flex items-center justify-center gap-2 rounded-xl bg-[#8B5CF6] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#7C3AED]"
           >
             <Plus size={18} />
@@ -240,7 +279,7 @@ function BookChapters() {
         </div>
 
         {/* Book information */}
-        <div className="mb-7 flex flex-col gap-5 rounded-2xl border border-white/[0.08] bg-[#111114] p-5 sm:flex-row sm:items-center">
+        <div className="mb-7 flex flex-col gap-5 rounded-2xl border border-white/8 bg-[#111114] p-5 sm:flex-row sm:items-center">
           <div className="flex h-24 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#8B5CF6]/10">
             {book.coverImage ? (
               <img
@@ -314,7 +353,7 @@ function BookChapters() {
         </div>
 
         {/* Chapters list */}
-        <section className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111114]">
+        <section className="overflow-hidden rounded-2xl border border-white/8 bg-[#111114]">
           <div className="flex flex-col justify-between gap-3 border-b border-white/[0.07] p-5 sm:flex-row sm:items-center sm:p-6">
             <div>
               <h2 className="text-lg font-semibold">Chapters</h2>
@@ -324,17 +363,17 @@ function BookChapters() {
               </p>
             </div>
 
-            <span className="w-fit rounded-lg bg-white/[0.05] px-3 py-2 text-xs text-gray-400">
+            <span className="w-fit rounded-lg bg-white/5 px-3 py-2 text-xs text-gray-400">
               {chapters.length} Chapters
             </span>
           </div>
 
           {chapters.length > 0 ? (
-            <div className="divide-y divide-white/[0.06]">
+            <div className="divide-y divide-white/6">
               {chapters.map((chapter, index) => (
                 <div
-                  key={chapter.id}
-                  className="flex flex-col gap-4 p-5 transition hover:bg-white/[0.02] sm:flex-row sm:items-center sm:p-6"
+                  key={chapter._id}
+                  className="flex flex-col gap-4 p-5 transition hover:bg-white/2 sm:flex-row sm:items-center sm:p-6"
                 >
                   {/* Chapter number */}
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#8B5CF6]/10 text-sm font-bold text-[#A78BFA]">
@@ -382,7 +421,9 @@ function BookChapters() {
                   <div className="flex flex-wrap items-center gap-2">
                     <button
                       onClick={() =>
-                        navigate(`/admin/chapters/${bookId}/${chapter.id}/edit`)
+                        navigate(
+                          `/admin/chapters/${bookId}/${chapter._id}/edit`,
+                        )
                       }
                       className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs text-gray-300 transition hover:border-[#8B5CF6]/40 hover:text-white"
                     >
@@ -391,7 +432,7 @@ function BookChapters() {
                     </button>
 
                     <button
-                      onClick={() => handleDeleteChapter(chapter.id)}
+                      onClick={() => handleDeleteChapter(chapter._id)}
                       className="flex items-center justify-center rounded-lg border border-white/10 p-2 text-gray-500 transition hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
                       title="Delete chapter"
                     >
@@ -415,7 +456,7 @@ function BookChapters() {
               </p>
 
               <button
-                onClick={() => navigate(`/admin/chapters/${bookId}/add`)}
+                onClick={() => navigate(`/admin/books/${bookId}/chapters/add`)}
                 className="mt-5 flex items-center gap-2 rounded-xl bg-[#8B5CF6] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#7C3AED]"
               >
                 <Plus size={17} />
@@ -457,7 +498,7 @@ function StatCard({ title, value, icon: Icon, color }) {
   };
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-[#111114] p-4 sm:p-5">
+    <div className="rounded-2xl border border-white/8 bg-[#111114] p-4 sm:p-5">
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs text-gray-500 sm:text-sm">{title}</p>
 

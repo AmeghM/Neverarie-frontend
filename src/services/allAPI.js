@@ -10,3 +10,71 @@ export const registerAPI = async (reqBody) => {
 export const loginAPI = async (reqBody) => {
   return await commonAPI("POST", `${SERVERURL}/login`, reqBody);
 };
+
+// get books
+export const getPublicBooksAPI = async () => {
+  return await commonAPI("GET", `${SERVERURL}/discover`);
+};
+// viewBook
+export const viewBookAPI = async (slug) => {
+  return await commonAPI("GET", `${SERVERURL}/books/${slug}`);
+};
+
+// view chapters
+export const getPublicChaptersAPI = async (bookId) => {
+  return await commonAPI("GET", `${SERVERURL}/books/${bookId}/chapters`);
+};
+
+// read chapters
+export const getPublicChapterByIdAPI = async (chapterId) => {
+  return await commonAPI("GET", `${SERVERURL}/book/chapter/${chapterId}`);
+};
+
+// admin
+// add book
+export const addBookAPI = async (reqBody) => {
+  return await commonAPI("POST", `${SERVERURL}/admin/books/add`, reqBody);
+};
+
+// get all books
+export const getAllBooksAPI = async () => {
+  return await commonAPI("GET", `${SERVERURL}/admin/books`);
+};
+
+// Get single book
+export const getBookByIdAPI = async (id) => {
+  return await commonAPI("GET", `${SERVERURL}/admin/books/${id}`);
+};
+
+// update
+export const updateBookAPI = async (id, bookData) => {
+  return await commonAPI(
+    "PUT",
+    `${SERVERURL}/admin/books/${id}/edit`,
+    bookData,
+  );
+};
+// delete
+export const deleteBookAPI = async (id) => {
+  return await commonAPI("DELETE", `${SERVERURL}/admin/books/delete/${id}`);
+};
+
+// chapters
+// get admin book chapters
+export const getAdminChaptersAPI = async (bookId) => {
+  return await commonAPI("GET", `${SERVERURL}/admin/books/${bookId}/chapters`);
+};
+
+// add chapters
+export const addChapterAPI = async (bookId, chapterData) => {
+  return await commonAPI(
+    "POST",
+    `${SERVERURL}/admin/books/${bookId}/chapters/add`,
+    chapterData,
+  );
+};
+
+// delete chapter
+export const deleteChapterAPI = async (chapterId) => {
+  return await commonAPI("DELETE", `${SERVERURL}/admin/chapters/${chapterId}`);
+};

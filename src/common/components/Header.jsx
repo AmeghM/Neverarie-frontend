@@ -1,13 +1,14 @@
 import { useState } from "react";
 import logoImg from "../../assets/media/Logo.png";
-import { CircleUserRound, Menu, X } from "lucide-react";
+import { CircleUserRound, Menu, X, LogOut } from "lucide-react";
 import {
   AnimatePresence,
   motion,
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Header() {
   const NavbarMenu = [
@@ -35,6 +36,20 @@ function Header() {
 
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(() => {
+    return JSON.parse(localStorage.getItem("user") || "null");
+  });
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    setUser(null);
+    setLogBtn(false);
+
+    navigate("/login");
+  };
 
   const { scrollY } = useScroll();
 
@@ -43,6 +58,17 @@ function Header() {
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 30);
   });
+
+  useEffect(() => {
+    const updateUser = () => {
+      setUser(JSON.parse(localStorage.getItem("user") || "null"));
+    };
+    window.addEventListener("authChanged", updateUser);
+
+    return () => {
+      window.removeEventListener("authChanged", updateUser);
+    };
+  }, []);
   return (
     <>
       <motion.header
@@ -156,22 +182,35 @@ function Header() {
                       className="absolute text-white bg-[#171020]/95 border border-[#8B5CF6]/40 w-36 overflow-hidden p-2 top-full right-0 z-60 mt-2 rounded-xl backdrop-blur-xl shadow-xl shadow-black/30"
                     >
                       <div className="flex flex-col items-center gap-1">
-                        <Link
-                          to="/login"
-                          className="block rounded-lg px-4 py-2.5  text-sm font-medium hover:bg-[#8B5CF6]/15
-                hover:text-[#A78BFA] transition-all duration-100"
-                        >
-                          Login
-                        </Link>
-                        <div className="mx-2 w-full h-px bg-white/30"></div>
-                        <Link
-                          to="/signup"
-                          className="block rounded-lg px-4 py-2.5 text-sm font-medium
-                transition-colors hover:bg-[#8B5CF6]/15
-                hover:text-[#A78BFA]"
-                        >
-                          Sign Up
-                        </Link>
+                        {user ? (
+                          <button
+                            onClick={handleLogout}
+                            className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-red-400 transition-all hover:bg-red-500/10 hover:text-red-300"
+                          >
+                            <LogOut size={16} />
+                            Logout
+                          </button>
+                        ) : (
+                          <>
+                            <Link
+                              to="/login"
+                              onClick={() => setLogBtn(false)}
+                              className="block rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-[#8B5CF6]/15 hover:text-[#A78BFA] transition-all duration-100"
+                            >
+                              Login
+                            </Link>
+
+                            <div className="mx-2 w-full h-px bg-white/30" />
+
+                            <Link
+                              to="/signup"
+                              onClick={() => setLogBtn(false)}
+                              className="block rounded-lg px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[#8B5CF6]/15 hover:text-[#A78BFA]"
+                            >
+                              Sign Up
+                            </Link>
+                          </>
+                        )}
                       </div>
                     </motion.div>
                   </>

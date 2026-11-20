@@ -23,6 +23,8 @@ import BookChapters from "./admin/pages/BookChapters";
 import AddChapter from "./admin/pages/Chapters/AddChapter";
 import EditChapter from "./admin/pages/Chapters/EditChapter";
 
+import ProtectedRoute from "./common/components/ProtectedRoute";
+
 function App() {
   const [loader, setLoader] = useState(false);
   useEffect(() => {
@@ -45,6 +47,7 @@ function App() {
     <>
       <Cursor />
       <Routes>
+        {/* Public */}
         <Route path="/" element={loader ? <PreLoader /> : <LandPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
@@ -52,23 +55,31 @@ function App() {
         <Route path="/support" element={<Support />} />
         <Route path="/author" element={<Author />} />
 
-        <Route path="/book" element={<BookDetails />} />
-        <Route path="/chapter" element={<Chapters />} />
+        <Route path="/books/:slug" element={<BookDetails />} />
+        <Route path="/book/chapter/:chapterId" element={<Chapters />} />
 
         {/* admin */}
-        <Route path="/admin/dash" element={<AdminDash />} />
-        <Route path="/admin/books" element={<AdminBooks />} />
-        <Route path="/admin/chapters" element={<AdminChapters />} />
-        <Route path="/admin/settings" element={<AdminSettings />} />
-        <Route path="/admin/books/add" element={<AdminAddBook />} />
-        <Route path="/admin/books/:id/edit" element={<AdminEditBook />} />
-        {/*  */}
-        <Route path="/admin/chapters/:bookId/" element={<BookChapters />} />
-        <Route path="/admin/chapters/:bookId/add" element={<AddChapter />} />
-        <Route
-          path="/admin/chapters/:bookId/:chapterId/edit"
-          element={<EditChapter />}
-        />
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/admin/dash" element={<AdminDash />} />
+          <Route path="/admin/books" element={<AdminBooks />} />
+          <Route path="/admin/chapters" element={<AdminChapters />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
+          <Route path="/admin/books/add" element={<AdminAddBook />} />
+          <Route path="/admin/books/:id/edit" element={<AdminEditBook />} />
+          {/*  */}
+          <Route
+            path="/admin/books/:bookId/chapters"
+            element={<BookChapters />}
+          />
+          <Route
+            path="/admin/books/:bookId/chapters/add"
+            element={<AddChapter />}
+          />
+          <Route
+            path="/admin/chapters/:bookId/:chapterId/edit"
+            element={<EditChapter />}
+          />
+        </Route>
       </Routes>
     </>
   );

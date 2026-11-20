@@ -9,10 +9,10 @@ import {
   ArrowDown,
   Save,
   CalendarClock,
-  Eye,
   FileEdit,
   Send,
 } from "lucide-react";
+import { addChapterAPI } from "../../services/allAPI";
 
 function ChapterForm() {
   const navigate = useNavigate();
@@ -25,54 +25,12 @@ function ChapterForm() {
 
   const [title, setTitle] = useState("");
   const [chapterNumber, setChapterNumber] = useState("");
-  const [description, setDescription] = useState("");
+
   const [status, setStatus] = useState("Draft");
   const [scheduledAt, setScheduledAt] = useState("");
 
   const [newPages, setNewPages] = useState([]);
   const [existingPages, setExistingPages] = useState([]);
-
-  useEffect(() => {
-    if (isEdit) {
-      fetchChapter();
-    }
-  }, [chapterId]);
-
-  const fetchChapter = async () => {
-    try {
-      setFetching(true);
-
-      const response = await fetch(`/api/chapters/${chapterId}`, {
-        credentials: "include",
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to load chapter");
-      }
-
-      const chapter = data.chapter || data;
-
-      setTitle(chapter.title || "");
-      setChapterNumber(chapter.chapterNumber ?? "");
-      setDescription(chapter.description || "");
-      setStatus(chapter.status || "Draft");
-
-      if (chapter.scheduledAt) {
-        setScheduledAt(
-          new Date(chapter.scheduledAt).toISOString().slice(0, 16),
-        );
-      }
-
-      setExistingPages(chapter.pages || []);
-    } catch (error) {
-      alert(error.message);
-      navigate(`/admin/chapters/${bookId}`);
-    } finally {
-      setFetching(false);
-    }
-  };
 
   // Add selected images
   const handlePageUpload = (event) => {
@@ -147,7 +105,7 @@ function ChapterForm() {
 
       formData.append("title", title.trim());
       formData.append("chapterNumber", chapterNumber);
-      formData.append("description", description);
+
       formData.append("status", status);
 
       if (status === "Scheduled") {
@@ -159,29 +117,15 @@ function ChapterForm() {
         formData.append("pages", page.file);
       });
 
-      const url = isEdit
-        ? `/api/chapters/${chapterId}`
-        : `/api/books/${bookId}/chapters`;
+      const res = await addChapterAPI(bookId, formData);
 
-      const response = await fetch(url, {
-        method: isEdit ? "PUT" : "POST",
-        body: formData,
-        credentials: "include",
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to save chapter");
+      if (!res.data.success) {
+        throw new Error(res.data.message || "Failed to create chapter");
       }
 
-      alert(
-        isEdit
-          ? "Chapter updated successfully!"
-          : "Chapter created successfully!",
-      );
+      alert("Chapter created successfully!");
 
-      navigate(`/admin/chapters/${bookId}`);
+      navigate(`/admin/books/${bookId}/chapters`);
     } catch (error) {
       alert(error.message || "Something went wrong");
     } finally {
@@ -256,20 +200,6 @@ function ChapterForm() {
               <option value="Published">Publish Now</option>
               <option value="Scheduled">Schedule Publishing</option>
             </select>
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className="mb-2 block text-sm font-medium text-gray-300">
-              Chapter Description
-            </label>
-
-            <textarea
-              rows={4}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Write a short description of this chapter..."
-              className="w-full resize-y rounded-xl border border-white/10 bg-[#09090B] px-4 py-3 text-sm text-white outline-none placeholder:text-gray-600 focus:border-[#8B5CF6]"
-            />
           </div>
 
           {status === "Scheduled" && (

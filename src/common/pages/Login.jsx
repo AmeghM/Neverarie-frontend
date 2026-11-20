@@ -17,34 +17,37 @@ function Login() {
 
     if (!email || !password) {
       alert("Fill the details!");
-    } else {
-      try {
-        const result = await loginAPI(userDetails);
-        if (result.status == 200) {
-          setUserDetails({
-            email: "",
-            password: "",
-          });
-          navigate("/");
-          alert("login successfully");
-        } else if (result.status == 404) {
-          alert(result.response.data);
-          setUserDetails({
-            email: "",
-            password: "",
-          });
-        } else if (result.status == 401) {
-          alert(result.response.data);
+      return;
+    }
+    try {
+      const result = await loginAPI(userDetails);
+      if (result.status == 200) {
+        const { token, user } = result.data;
+
+        // auth details
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        window.dispatchEvent(new Event("authChanged"));
+
+        setUserDetails({
+          email: "",
+          password: "",
+        });
+
+        alert("login successfully");
+
+        // redirect
+        if (user.role === "admin") {
+          navigate("/admin/dash");
         } else {
-          alert("Something went wrong");
-          setUserDetails({
-            email: "",
-            password: "",
-          });
+          navigate("/");
         }
-      } catch (error) {
-        console.log(error);
       }
+    } catch (error) {
+      console.log(error);
+
+      alert(error.response?.data?.message || "Login failed. Please try again.");
     }
   };
   return (
@@ -110,7 +113,13 @@ function Login() {
             <h1 className="text-center text-white text-2xl font-semibold  sm:text-3xl">
               Welcome Back!
             </h1>
-            <form action="" className="mt-6 space-y-5 sm:mt-8">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleLogin();
+              }}
+              className="mt-6 space-y-5 sm:mt-8"
+            >
               <div>
                 <label
                   htmlFor=""
@@ -119,7 +128,7 @@ function Login() {
                   Email Address
                 </label>
                 <input
-                  type="text"
+                  type="email"
                   placeholder="you@example.com"
                   required
                   value={userDetails?.email}
@@ -160,8 +169,7 @@ function Login() {
               </div>
 
               <button
-                type="button"
-                onClick={handleLogin}
+                type="submit"
                 className="w-full rounded-xl bg-[#8B5CF6] px-4 py-3 font-semibold text-white transition hover:bg-[#a27df8] focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-black"
               >
                 Login

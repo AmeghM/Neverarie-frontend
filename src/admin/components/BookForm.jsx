@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  BookOpen,
-  Upload,
-  X,
-  Image as ImageIcon,
-  Save,
-  ArrowLeft,
-} from "lucide-react";
+import { Upload, X, Image as ImageIcon, Save, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const EMPTY_BOOK = {};
@@ -82,6 +75,7 @@ function BookForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (loading) return;
 
     const bookData = new FormData();
 
@@ -89,6 +83,7 @@ function BookForm({
     bookData.append("description", formData.description.trim());
     bookData.append("genre", formData.genre);
     bookData.append("author", formData.author.trim());
+
     bookData.append(
       "tags",
       JSON.stringify(
@@ -98,12 +93,15 @@ function BookForm({
           .filter(Boolean),
       ),
     );
+
     bookData.append("status", formData.status);
 
+    // Cover image
     if (coverFile) {
       bookData.append("coverImage", coverFile);
     }
 
+    // Pass FormData to parent
     onSubmit(bookData);
   };
 
