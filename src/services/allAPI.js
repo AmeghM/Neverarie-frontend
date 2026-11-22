@@ -38,6 +38,16 @@ export const getPublicChapterByIdAPI = async (chapterId) => {
   return await commonAPI("GET", `${SERVERURL}/book/chapter/${chapterId}`);
 };
 
+// homepage
+export const getPublicHomepageAPI = async () => {
+  return await commonAPI("GET", `${SERVERURL}/homepage`, "");
+};
+
+// latest book
+export const getLatestBooksAPI = async () => {
+  return await commonAPI("GET", `${SERVERURL}/latest`, "");
+};
+
 // admin
 // add book
 export const addBookAPI = async (reqBody) => {
@@ -115,6 +125,24 @@ export const deleteChapterAPI = async (chapterId) => {
     "DELETE",
     `${SERVERURL}/admin/chapters/${chapterId}`,
     "",
+    getAuthHeaders(),
+  );
+};
+// homepage settings
+export const getHomepageSettingsAPI = async () => {
+  return await commonAPI(
+    "GET",
+    `${SERVERURL}/admin/homepageSettings`,
+    "",
+    getAuthHeaders(),
+  );
+};
+// edit
+export const updateHomepageSettingsAPI = async (reqBody) => {
+  return await commonAPI(
+    "PUT",
+    `${SERVERURL}/admin/homepageSettings/edit`,
+    reqBody,
     getAuthHeaders(),
   );
 };
