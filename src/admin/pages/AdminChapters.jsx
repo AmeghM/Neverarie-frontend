@@ -14,7 +14,7 @@ import {
 import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
 import { useEffect } from "react";
-import { getAllBooksAPI } from "../../services/allAPI";
+import { getAdminChaptersAPI, getAllBooksAPI } from "../../services/allAPI";
 
 function AdminChapters() {
   const navigate = useNavigate();
@@ -34,9 +34,50 @@ function AdminChapters() {
       setError("");
 
       const res = await getAllBooksAPI();
-      setBooks(res.data.books || []);
+      const booksData = res.data.books || [];
+
+      // Fetch chapters for every book
+      const chapterResponses = await Promise.allSettled(
+        booksData.map((book) => getAdminChaptersAPI(book._id)),
+      );
+
+      // Calculate chapter statistics for each book
+      const updatedBooks = booksData.map((book, index) => {
+        const response = chapterResponses[index];
+        const chapters =
+          response.status === "fulfilled"
+            ? response.value.data.chapters || []
+            : [];
+
+        const totalChapters = chapters.length;
+
+        const publishedChapters = chapters.filter(
+          (chapter) =>
+            chapter.novelStatus === "Published" ||
+            chapter.comicStatus === "Published",
+        ).length;
+
+        const draftChapters = chapters.filter(
+          (chapter) =>
+            (chapter.content?.trim() && chapter.novelStatus === "Draft") ||
+            (chapter.pages?.length > 0 && chapter.comicStatus === "Draft"),
+        ).length;
+
+        // Scheduling is not implemented yet
+        const scheduledChapters = 0;
+
+        return {
+          ...book,
+          totalChapters,
+          publishedChapters,
+          draftChapters,
+          scheduledChapters,
+        };
+      });
+
+      setBooks(updatedBooks);
     } catch (error) {
-      console.log("Books fetch error: ", error);
+      console.log("Books fetch error:", error);
       setError(
         error.response?.data?.message || "Failed to fetch books. Try again",
       );
@@ -66,17 +107,8 @@ function AdminChapters() {
   // Overall statistics
   const totalBooks = books.length;
 
-  const publishedBooks = books.filter(
-    (book) => book.status === "Published",
-  ).length;
-
   const totalChapters = books.reduce(
     (total, book) => total + book.totalChapters,
-    0,
-  );
-
-  const totalDraftChapters = books.reduce(
-    (total, book) => total + book.draftChapters,
     0,
   );
 
@@ -189,7 +221,23 @@ function AdminChapters() {
               </div>
 
               {/* Book cards */}
-              {filteredBooks.length > 0 ? (
+
+              {loading ? (
+                <div className="py-16 text-center text-sm text-gray-400">
+                  Loading books...
+                </div>
+              ) : error ? (
+                <div className="py-16 text-center">
+                  <p className="text-sm text-red-400">{error}</p>
+
+                  <button
+                    onClick={fetchBooks}
+                    className="mt-4 rounded-lg bg-[#8B5CF6] px-4 py-2 text-sm"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : filteredBooks.length > 0 ? (
                 <div className="grid grid-cols-1 gap-5 p-5 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">
                   {filteredBooks.map((book) => (
                     <div
@@ -285,7 +333,16 @@ function AdminChapters() {
                           </span>
 
                           <span className="text-xs text-gray-400">
-                            {book.updated}
+                            {book.updatedAt
+                              ? new Date(book.updatedAt).toLocaleDateString(
+                                  "en-IN",
+                                  {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                  },
+                                )
+                              : "Not available"}
                           </span>
                         </div>
 
@@ -329,7 +386,7 @@ function AdminChapters() {
               )}
 
               {/* Footer */}
-              {filteredBooks.length > 0 && (
+              {!loading && !error && filteredBooks.length > 0 && (
                 <div className="border-t border-white/[0.07] px-5 py-4 sm:px-6">
                   <p className="text-xs text-gray-500">
                     Showing {filteredBooks.length} of {totalBooks} books
@@ -340,34 +397,6 @@ function AdminChapters() {
           </div>
         </main>
       </div>
-    </div>
-  );
-}
-
-// Reusable statistics card
-function StatCard({ title, value, icon: Icon, color }) {
-  const colorStyles = {
-    purple: "bg-[#8B5CF6]/10 text-[#A78BFA]",
-    green: "bg-green-500/10 text-green-400",
-    yellow: "bg-yellow-500/10 text-yellow-400",
-    blue: "bg-blue-500/10 text-blue-400",
-  };
-
-  return (
-    <div className="rounded-2xl border border-white/8 bg-[#111114] p-4 sm:p-5">
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-xs text-gray-500 sm:text-sm">{title}</p>
-
-        <div
-          className={`flex h-9 w-9 items-center justify-center rounded-xl ${colorStyles[color]}`}
-        >
-          <Icon size={18} />
-        </div>
-      </div>
-
-      <h3 className="mt-4 text-2xl font-bold text-white sm:text-3xl">
-        {value}
-      </h3>
     </div>
   );
 }

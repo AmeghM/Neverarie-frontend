@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import {
   Upload,
   ImagePlus,
@@ -8,9 +7,9 @@ import {
   ArrowUp,
   ArrowDown,
   Save,
-  CalendarClock,
-  FileEdit,
-  Send,
+  // CalendarClock,
+  // FileEdit,
+  // Send,
 } from "lucide-react";
 import { addChapterAPI } from "../../services/allAPI";
 
@@ -25,6 +24,10 @@ function ChapterForm() {
 
   const [title, setTitle] = useState("");
   const [chapterNumber, setChapterNumber] = useState("");
+
+  const [content, setContent] = useState("");
+  const [novelStatus, setNovelStatus] = useState("Draft");
+  const [comicStatus, setComicStatus] = useState("Draft");
 
   const [status, setStatus] = useState("Draft");
   const [scheduledAt, setScheduledAt] = useState("");
@@ -88,13 +91,19 @@ function ChapterForm() {
       return;
     }
 
-    if (status === "Scheduled" && !scheduledAt) {
-      alert("Please select a scheduled publishing date and time.");
+    const novelData = Boolean(content.trim());
+    const comicData = newPages.length > 0;
+
+    if (!novelData && !comicData) {
+      alert("Add novel content or upload comic pages.");
       return;
     }
-
-    if (!isEdit && newPages.length === 0) {
-      alert("Please upload at least one manga page.");
+    if (novelStatus === "Published" && !novelData) {
+      alert("Add novel content before publishing.");
+      return;
+    }
+    if (comicStatus === "Published" && !comicData) {
+      alert("Upload comic pages before publishing.");
       return;
     }
 
@@ -105,14 +114,11 @@ function ChapterForm() {
 
       formData.append("title", title.trim());
       formData.append("chapterNumber", chapterNumber);
+      formData.append("content", content);
+      formData.append("novelStatus", novelStatus);
+      formData.append("comicStatus", comicStatus);
 
-      formData.append("status", status);
-
-      if (status === "Scheduled") {
-        formData.append("scheduledAt", scheduledAt);
-      }
-
-      // Upload newly selected page images in their current order
+      // Upload newly selected page images current order
       newPages.forEach((page) => {
         formData.append("pages", page.file);
       });
@@ -127,7 +133,11 @@ function ChapterForm() {
 
       navigate(`/admin/books/${bookId}/chapters`);
     } catch (error) {
-      alert(error.message || "Something went wrong");
+      alert(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong",
+      );
     } finally {
       setLoading(false);
     }
@@ -218,6 +228,38 @@ function ChapterForm() {
               />
             </div>
           )}
+        </div>
+      </section>
+
+      {/* paragraphs */}
+      <section className="rounded-2xl border border-white/8 bg-[#111114] p-5 sm:p-7">
+        <h2 className="text-lg font-semibold">Novel Content</h2>
+
+        <p className="mt-1 text-sm text-gray-500">
+          Write or paste your chapter story here.
+        </p>
+
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Start writing your chapter..."
+          rows={15}
+          className="mt-5 w-full resize-y rounded-xl border border-white/10 bg-[#09090B] p-4 text-sm leading-8 text-gray-200 outline-none placeholder:text-gray-600 focus:border-[#8B5CF6]"
+        />
+
+        <div className="mt-4">
+          <label className="mb-2 block text-sm font-medium text-gray-300">
+            Novel Publishing Status
+          </label>
+
+          <select
+            value={novelStatus}
+            onChange={(e) => setNovelStatus(e.target.value)}
+            className="w-full rounded-xl border border-white/10 bg-[#09090B] px-4 py-3 text-sm text-white"
+          >
+            <option value="Draft">Save as Draft</option>
+            <option value="Published">Publish Now</option>
+          </select>
         </div>
       </section>
 
@@ -366,10 +408,24 @@ function ChapterForm() {
             No manga pages selected yet.
           </p>
         )}
+        <div className="mt-7">
+          <label className="mb-2 block text-sm font-medium text-gray-300">
+            Comic Publishing Status
+          </label>
+
+          <select
+            value={comicStatus}
+            onChange={(e) => setComicStatus(e.target.value)}
+            className="w-full rounded-xl border border-white/10 bg-[#09090B] px-4 py-3 text-sm text-white"
+          >
+            <option value="Draft">Save as Draft</option>
+            <option value="Published">Publish Now</option>
+          </select>
+        </div>
       </section>
 
       {/* Publishing information */}
-      <section className="rounded-2xl border border-white/8 bg-[#111114] p-5 sm:p-7">
+      {/* <section className="rounded-2xl border border-white/8 bg-[#111114] p-5 sm:p-7">
         <h2 className="text-lg font-semibold">Publishing</h2>
 
         <p className="mt-1 text-sm text-gray-500">
@@ -401,7 +457,7 @@ function ChapterForm() {
             description="Publish at a later time."
           />
         </div>
-      </section>
+      </section> */}
 
       {/* Form actions */}
       <div className="flex flex-col-reverse justify-end gap-3 sm:flex-row">
@@ -420,42 +476,42 @@ function ChapterForm() {
           className="flex items-center justify-center gap-2 rounded-xl bg-[#8B5CF6] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#7C3AED] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Save size={17} />
-          {loading ? "Saving..." : isEdit ? "Save Changes" : "Create Chapter"}
+          {loading ? "Creating..." : isEdit ? "Save Changes" : "Create Chapter"}
         </button>
       </div>
     </form>
   );
 }
 
-function StatusOption({ active, onClick, icon: Icon, title, description }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-xl border p-4 text-left transition ${
-        active
-          ? "border-[#8B5CF6] bg-[#8B5CF6]/10"
-          : "border-white/10 bg-[#09090B] hover:border-white/20"
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <Icon
-          size={20}
-          className={active ? "text-[#A78BFA]" : "text-gray-500"}
-        />
+// function StatusOption({ active, onClick, icon: Icon, title, description }) {
+//   return (
+//     <button
+//       type="button"
+//       onClick={onClick}
+//       className={`rounded-xl border p-4 text-left transition ${
+//         active
+//           ? "border-[#8B5CF6] bg-[#8B5CF6]/10"
+//           : "border-white/10 bg-[#09090B] hover:border-white/20"
+//       }`}
+//     >
+//       <div className="flex items-center justify-between">
+//         <Icon
+//           size={20}
+//           className={active ? "text-[#A78BFA]" : "text-gray-500"}
+//         />
 
-        <span
-          className={`h-3 w-3 rounded-full border ${
-            active ? "border-[#8B5CF6] bg-[#8B5CF6]" : "border-gray-600"
-          }`}
-        />
-      </div>
+//         <span
+//           className={`h-3 w-3 rounded-full border ${
+//             active ? "border-[#8B5CF6] bg-[#8B5CF6]" : "border-gray-600"
+//           }`}
+//         />
+//       </div>
 
-      <h3 className="mt-4 text-sm font-semibold text-white">{title}</h3>
+//       <h3 className="mt-4 text-sm font-semibold text-white">{title}</h3>
 
-      <p className="mt-1 text-xs text-gray-500">{description}</p>
-    </button>
-  );
-}
+//       <p className="mt-1 text-xs text-gray-500">{description}</p>
+//     </button>
+//   );
+// }
 
 export default ChapterForm;

@@ -2,8 +2,16 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 // import BookImg from "../../assets/media/books/ArtoriusCover.jpg";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Bookmark, Star, BookOpen } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Bookmark,
+  Star,
+  BookOpen,
+  Sparkles,
+  ArrowRight,
+  BookImage,
+  X,
+} from "lucide-react";
 import { useEffect } from "react";
 import { getPublicChaptersAPI, viewBookAPI } from "../../services/allAPI";
 
@@ -12,12 +20,17 @@ function BookDetails() {
   const { slug } = useParams();
   const [book, setBook] = useState(null);
   const [chapters, setChapters] = useState([]);
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [chapterLoading, setChapterLoading] = useState(true);
+  const [selectedChapter, setSelectedChapter] = useState(null);
 
   const [error, setError] = useState("");
   const [chapterError, setChapterError] = useState("");
+
+  const novel = Boolean(selectedChapter?.content?.trim());
+  const comic = Boolean(selectedChapter?.pages?.length);
 
   // format chapter published data
   const formatDate = (date) => {
@@ -147,32 +160,25 @@ function BookDetails() {
             {/* Buttons */}
             <div className="flex items-center justify-between mt-4 mb-4">
               <div className="flex gap-4">
-                <Link
-                  to={
-                    chapters.length > 0
-                      ? `/book/chapter/${chapters[chapters.length - 1]._id}`
-                      : "#"
+                <button
+                  onClick={() =>
+                    chapters.length > 0 &&
+                    setSelectedChapter(chapters[chapters.length - 1])
                   }
-                  onClick={(e) => {
-                    if (chapters.length === 0) e.preventDefault();
-                  }}
+                  disabled={chapters.length === 0}
                   className={`px-4 py-2  rounded-lg text-lg ${chapters.length > 0 ? "bg-violet-400 hover:bg-violet-300" : "bg-gray-700 text-gray-400 cursor-not-allowed"} `}
                 >
                   Read First
-                </Link>
-                <Link
-                  to={
-                    chapters.length > 0
-                      ? `/book/chapter/${chapters[0]._id}`
-                      : "#"
+                </button>
+                <button
+                  onClick={() =>
+                    chapters.length > 0 && setSelectedChapter(chapters[0])
                   }
-                  onClick={(e) => {
-                    if (chapters.length === 0) e.preventDefault();
-                  }}
+                  disabled={chapters.length === 0}
                   className={`px-4 py-2  rounded-lg text-lg ${chapters.length > 0 ? "bg-purple-600 hover:bg-purple-500" : "bg-gray-700 text-gray-400 cursor-not-allowed"} `}
                 >
                   Read Last
-                </Link>
+                </button>
               </div>
 
               <div className="flex gap-5">
@@ -214,9 +220,10 @@ function BookDetails() {
                 </p>
               ) : chapters.length > 0 ? (
                 chapters.map((chapter) => (
-                  <Link
+                  <button
                     key={chapter._id}
-                    to={`/book/chapter/${chapter._id}`}
+                    // to={`/book/chapter/${chapter._id}`}
+                    onClick={() => setSelectedChapter(chapter)}
                     className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-700/30 hover:bg-violet-500/10 border border-transparent hover:border-violet-500/30 transition-all text-left group"
                   >
                     <div className="w-10 h-10 shrink-0 rounded-lg bg-gray-700 flex group-hover:bg-violet-500/50 items-center justify-center font-semibold text-gray-200 transition-all">
@@ -225,11 +232,11 @@ function BookDetails() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-medium truncate text-gray-200">
+                        <h3 className="text-[12px] font-medium truncate text-gray-200">
                           Chapter {chapter.chapterNumber}
                         </h3>
 
-                        <span className="shrink-0 text-[10px] font-bold bg-violet-500/15 text-violet-400 px-2 py-0.5 rounded-full">
+                        <span className="shrink-0 text-[9px] font-bold bg-violet-500/15 text-violet-400 px-2 py-0.5 rounded-full">
                           New
                         </span>
                       </div>
@@ -241,11 +248,15 @@ function BookDetails() {
                           text-xs text-gray-400"
                       >
                         <span className="italic">
-                          {formatDate(chapter.publishedAt)}
+                          {formatDate(
+                            chapter.novelStatus === "Published"
+                              ? chapter.novelPublishedAt
+                              : chapter.comicPublishedAt,
+                          )}
                         </span>
                       </div>
                     </div>
-                  </Link>
+                  </button>
                 ))
               ) : (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
@@ -283,6 +294,121 @@ function BookDetails() {
 
       {/* recomended */}
       <section></section>
+
+      {/* Reading Mode Selection Overlay */}
+      {selectedChapter && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+          onClick={() => setSelectedChapter(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-[#111113] shadow-2xl"
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedChapter(null)}
+              className="absolute right-4 top-4 z-10 rounded-full bg-white/5 p-2 text-gray-400 transition hover:bg-white/10 hover:text-white"
+            >
+              <X size={19} />
+            </button>
+
+            {/* Header */}
+            <div className="border-b border-white/[0.08] px-6 pb-6 pt-8 text-center">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-500/10 text-violet-400">
+                <BookOpen size={24} />
+              </div>
+
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-violet-400">
+                Choose your experience
+              </p>
+
+              <h2 className="text-xl font-bold text-white sm:text-2xl">
+                How would you like to read?
+              </h2>
+
+              <p className="mt-2 text-sm text-gray-500">
+                Chapter {selectedChapter.chapterNumber}
+                {selectedChapter.title && ` · ${selectedChapter.title}`}
+              </p>
+            </div>
+
+            {/* Reading Options */}
+            <div
+              className={`grid grid-cols-1 gap-3 p-5 ${
+                comic && novel ? "sm:grid-cols-2" : "sm:grid-cols-1"
+              }`}
+            >
+              {/* Comic Option */}
+              {comic && (
+                <button
+                  onClick={() => {
+                    navigate(`/book/chapter/${selectedChapter._id}?mode=comic`);
+                    setSelectedChapter(null);
+                  }}
+                  className="group rounded-xl border border-white/10 bg-white/3 p-5 text-left transition-all duration-300 hover:border-violet-500/60 hover:bg-violet-500/[0.08]"
+                >
+                  <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-violet-500/10 text-violet-400 transition group-hover:bg-violet-500 group-hover:text-white">
+                    <BookImage size={22} />
+                  </div>
+
+                  <h3 className="mb-1 font-semibold text-white">Comic</h3>
+
+                  <p className="text-xs leading-relaxed text-gray-500">
+                    Read through illustrated artwork.
+                  </p>
+
+                  <div className="mt-5 flex items-center justify-between text-xs font-semibold text-violet-400">
+                    <span>Read visually</span>
+                    <ArrowRight
+                      size={16}
+                      className="transition group-hover:translate-x-1"
+                    />
+                  </div>
+                </button>
+              )}
+
+              {/* Novel Option */}
+              {novel && (
+                <button
+                  onClick={() => {
+                    navigate(`/book/chapter/${selectedChapter._id}?mode=novel`);
+                    setSelectedChapter(null);
+                  }}
+                  className="group rounded-xl border border-white/10 bg-white/[0.03] p-5 text-left transition-all duration-300 hover:border-violet-500/60 hover:bg-violet-500/[0.08]"
+                >
+                  <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-violet-500/10 text-violet-400 transition group-hover:bg-violet-500 group-hover:text-white">
+                    <BookOpen size={22} />
+                  </div>
+
+                  <h3 className="mb-1 font-semibold text-white">Novel</h3>
+
+                  <p className="text-xs leading-relaxed text-gray-500">
+                    Enjoy the story through beautifully formatted text.
+                  </p>
+
+                  <div className="mt-5 flex items-center justify-between text-xs font-semibold text-violet-400">
+                    <span>Read as text</span>
+                    <ArrowRight
+                      size={16}
+                      className="transition group-hover:translate-x-1"
+                    />
+                  </div>
+                </button>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="px-5 pb-5 text-center">
+              <p className="text-xs text-gray-600">
+                <Sparkles size={12} className="mr-1 inline-block" />
+                Choose your preferred reading style
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   );

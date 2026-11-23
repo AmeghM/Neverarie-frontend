@@ -34,8 +34,11 @@ export const getPublicChaptersAPI = async (bookId) => {
 };
 
 // read chapters
-export const getPublicChapterByIdAPI = async (chapterId) => {
-  return await commonAPI("GET", `${SERVERURL}/book/chapter/${chapterId}`);
+export const getPublicChapterByIdAPI = async (chapterId, mode) => {
+  return await commonAPI(
+    "GET",
+    `${SERVERURL}/book/chapter/${chapterId}?mode=${mode || ""}`,
+  );
 };
 
 // homepage

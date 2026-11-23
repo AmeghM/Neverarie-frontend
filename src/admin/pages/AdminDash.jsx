@@ -21,6 +21,12 @@ function AdminDash() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [time, setTime] = useState(new Date());
   const navigate = useNavigate();
+  const [publishingStats, setPublishingStats] = useState({
+    total: 0,
+    published: 0,
+    drafts: 0,
+    scheduled: 0,
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -75,7 +81,7 @@ function AdminDash() {
     {
       title: "Scheduled",
       value: 0,
-      description: "Upcoming publications",
+      description: "Work in progress",
       icon: CalendarClock,
     },
   ]);
@@ -85,33 +91,38 @@ function AdminDash() {
       title: "Add New Book",
       description: "Create a new book",
       icon: Plus,
+      path: "/admin/books/add",
     },
     {
       title: "Manage Books",
       description: "View and edit your books",
       icon: BookOpen,
+      path: "/admin/books",
     },
     {
       title: "Manage Chapters",
       description: "Add or edit chapters",
       icon: FileText,
+      path: "/admin/chapters",
     },
     {
       title: "Upload Chapter",
       description: "Publish new manga pages",
       icon: Upload,
+      path: "/admin/chapters",
     },
   ];
   useEffect(() => {
     const fetchDashboardStats = async () => {
       try {
-        const response = await getAllBooksAPI();
+        const res = await getAllBooksAPI();
 
-        if (response.status === 200) {
-          const books = response.data.books;
+        if (res.status === 200) {
+          const books = res.data.books;
 
           let totalChapters = 0;
           let published = 0;
+          let drafts = 0;
           let scheduled = 0;
 
           // Fetch chapters for every book
@@ -121,18 +132,33 @@ function AdminDash() {
 
           chapterResponses.forEach((res) => {
             if (res.status === 200) {
-              const chapters = res.data.chapters;
+              const chapters = res.data.chapters || [];
 
               totalChapters += chapters.length;
 
               published += chapters.filter(
-                (chapter) => chapter.status === "Published",
+                (chapter) =>
+                  chapter.novelStatus === "Published" ||
+                  chapter.comicStatus === "Published",
+              ).length;
+              drafts += chapters.filter(
+                (chapter) =>
+                  (chapter.content?.trim() &&
+                    chapter.novelStatus === "Draft") ||
+                  (chapter.pages?.length > 0 &&
+                    chapter.comicStatus === "Draft"),
               ).length;
 
               scheduled += chapters.filter(
                 (chapter) => chapter.status === "Scheduled",
               ).length;
             }
+          });
+          setPublishingStats({
+            total: totalChapters,
+            published,
+            drafts,
+            scheduled,
           });
 
           setStats([
@@ -300,6 +326,7 @@ function AdminDash() {
                 return (
                   <div
                     key={item.title}
+                    onClick={() => navigate(item.path)}
                     className="group flex cursor-pointer items-center gap-4 rounded-xl border border-white/8 bg-[#111116] p-5 transition hover:border-[#8B5CF6]/40 hover:bg-[#17141F]"
                   >
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#8B5CF6]/10 text-[#A78BFA] transition group-hover:bg-[#8B5CF6] group-hover:text-white">
@@ -371,14 +398,27 @@ function AdminDash() {
                 <div>
                   <div className="mb-2 flex justify-between text-sm">
                     <span className="text-gray-400">Published</span>
-                    <span className="text-white">72 Chapters</span>
+                    <span className="text-white">
+                      {publishingStats.published} Chapters
+                    </span>
                   </div>
 
                   <div className="h-2 overflow-hidden rounded-full bg-white/8">
-                    <div className="h-full w-[84%] rounded-full bg-[#8B5CF6]" />
+                    <div
+                      className="h-full rounded-full bg-[#8B5CF6] transition-all duration-500"
+                      style={{
+                        width: `${
+                          publishingStats.total
+                            ? (publishingStats.published /
+                                publishingStats.total) *
+                              100
+                            : 0
+                        }%`,
+                      }}
+                    />
                   </div>
                 </div>
-
+                {/* 
                 <div>
                   <div className="mb-2 flex justify-between text-sm">
                     <span className="text-gray-400">Scheduled</span>
@@ -388,22 +428,35 @@ function AdminDash() {
                   <div className="h-2 overflow-hidden rounded-full bg-white/8">
                     <div className="h-full w-[5%] rounded-full bg-blue-400" />
                   </div>
-                </div>
+                </div> */}
 
                 <div>
                   <div className="mb-2 flex justify-between text-sm">
                     <span className="text-gray-400">Drafts</span>
-                    <span className="text-white">10 Chapters</span>
+                    <span className="text-white">
+                      {" "}
+                      {publishingStats.drafts} Chapters
+                    </span>
                   </div>
 
                   <div className="h-2 overflow-hidden rounded-full bg-white/8">
-                    <div className="h-full w-[12%] rounded-full bg-yellow-500" />
+                    <div
+                      className="h-full rounded-full bg-yellow-500 transition-all duration-500"
+                      style={{
+                        width: `${
+                          publishingStats.total
+                            ? (publishingStats.drafts / publishingStats.total) *
+                              100
+                            : 0
+                        }%`,
+                      }}
+                    />
                   </div>
                 </div>
               </div>
 
               <p className="mt-6 border-t border-white/8 pt-4 text-xs text-gray-500">
-                Total: 86 chapters
+                Total: {publishingStats.total} chapters
               </p>
             </div>
           </section>

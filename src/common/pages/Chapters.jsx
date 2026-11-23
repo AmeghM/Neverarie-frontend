@@ -1,6 +1,11 @@
 import Header from "../../common/components/Header";
 import Footer from "../../common/components/Footer";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  Link,
+  useSearchParams,
+} from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getPublicChapterByIdAPI } from "../../services/allAPI";
@@ -11,11 +16,14 @@ import {
   List,
   Layers,
   ArrowUp,
+  ArrowLeft,
 } from "lucide-react";
 
 function Chapters() {
   const { chapterId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const requestedMode = searchParams.get("mode");
 
   const [chapter, setChapter] = useState(null);
   const [book, setBook] = useState(null);
@@ -41,7 +49,7 @@ function Chapters() {
         setNextChapter(null);
         setCurrentPage(0);
 
-        const res = await getPublicChapterByIdAPI(chapterId);
+        const res = await getPublicChapterByIdAPI(chapterId, requestedMode);
         setChapter(res.data.chapter);
         setBook(res.data.book);
 
@@ -57,13 +65,26 @@ function Chapters() {
     if (chapterId) {
       fetchChapter();
     }
-  }, [chapterId]);
+  }, [chapterId, requestedMode]);
 
   const pages = chapter?.pages
     ? [...chapter.pages].sort((a, b) => a.pageNumber - b.pageNumber)
     : [];
 
   const totalPages = pages.length;
+
+  const novel = Boolean(chapter?.content?.trim());
+  const comic = Boolean(chapter?.pages?.length);
+  const formatMode =
+    requestedMode === "novel" && novel
+      ? "novel"
+      : requestedMode === "comic" && comic
+        ? "comic"
+        : comic
+          ? "comic"
+          : novel
+            ? "novel"
+            : "none";
 
   const goToNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
@@ -136,34 +157,20 @@ function Chapters() {
       <Header />
 
       <div className="min-h-screen  bg-[#101116] text-gray-200">
-        {/* TOP NAVBAR */}
-        {/* <nav className="h-16 border-b border-white/10 bg-[#15161d] px-4 md:px-10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate(-1)}
-              className="text-gray-400 hover:text-white text-sm"
-            >
-              ← Back
-            </button>
-            <span className="text-white font-bold tracking-wide text-lg">
-              Neve<span className="text-violet-500">rarie</span>
-            </span>
-          </div>
-
-          <div className="hidden md:block text-sm text-gray-400">
-            Reading <span className="text-white">{book.title}</span>
-          </div>
-
+        <div className="max-w-5xl mx-auto px-4 pt-24 sm:pt-28">
           <button
-            onClick={() => navigate(-1)}
-            className="text-gray-400 hover:text-white text-sm"
+            onClick={() => navigate(`/books/${book.slug}`)}
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg
+    text-violet-400 hover:text-white hover:bg-white/6
+    border border-white/8 transition-all text-sm"
           >
-            ☰ Chapters
+            <ArrowLeft size={16} />
+            <span>Back to Book</span>
           </button>
-        </nav> */}
+        </div>
 
         {/* CHAPTER HEADER */}
-        <section className="max-w-5xl mx-auto px-4 pt-25 sm:pt-28 pb-7 text-center">
+        <section className="max-w-5xl mx-auto px-4 pt-7  pb-7 text-center">
           <p className="text-violet-400 text-xs uppercase tracking-[0.25em] mb-3">
             {book.title}
           </p>
@@ -175,7 +182,12 @@ function Chapters() {
           <h2 className="text-gray-400 text-lg md:text-xl">{chapter.title}</h2>
 
           <p className="text-gray-600 text-xs mt-4">
-            Published {formatDate(chapter.publishedAt)}
+            Published{" "}
+            {formatDate(
+              formatMode === "novel"
+                ? chapter.novelPublishedAt
+                : chapter.comicPublishedAt,
+            )}
           </p>
         </section>
 
@@ -184,7 +196,7 @@ function Chapters() {
           <div className="flex items-center justify-between bg-[#191a22] border border-white/10 rounded-xl p-3 md:p-4">
             {previousChapter ? (
               <Link
-                to={`/chapter/${previousChapter._id}`}
+                to={`/book/chapter/${previousChapter._id}?mode=${formatMode}`}
                 className="text-gray-400 hover:text-white text-xs md:text-sm flex items-center gap-1"
               >
                 <ChevronLeft size={17} />
@@ -204,7 +216,7 @@ function Chapters() {
 
             {nextChapter ? (
               <Link
-                to={`/chapter/${nextChapter._id}`}
+                to={`/book/chapter/${nextChapter._id}?mode=${formatMode}`}
                 className="text-violet-400 hover:text-violet-300 text-xs md:text-sm flex items-center gap-1"
               >
                 <span className="hidden sm:inline">Next Chapter</span>
@@ -221,47 +233,106 @@ function Chapters() {
         </div>
 
         {/* READING MODE SELECTOR */}
-        <section className="max-w-5xl mx-auto px-4 mb-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-              <h3 className="text-white font-medium text-sm">Reading Mode</h3>
-              <p className="text-gray-500 text-xs mt-1">
-                Choose how you want to read
-              </p>
-            </div>
+        {formatMode === "comic" && (
+          <section className="max-w-5xl mx-auto px-4 mb-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h3 className="text-white font-medium text-sm">
+                  Comic Reading Mode
+                </h3>
+                <p className="text-gray-500 text-xs mt-1">
+                  Choose how you want to view pages
+                </p>
+              </div>
 
-            <div className="flex items-center bg-[#1a1b23] border border-white/10 rounded-lg p-1 w-full sm:w-auto">
-              <button
-                onClick={() => setReadingMode("scroll")}
-                className={`flex-1 sm:flex-none px-5 py-2.5 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition-all ${
-                  readingMode === "scroll"
-                    ? "bg-violet-600 text-white"
-                    : "text-gray-400 hover:text-white"
-                }`}
-              >
-                <List size={16} />
-                Scroll
-              </button>
+              <div className="flex items-center bg-[#1a1b23] border border-white/10 rounded-lg p-1 w-full sm:w-auto">
+                <button
+                  onClick={() => setReadingMode("scroll")}
+                  className={`flex-1 sm:flex-none px-5 py-2.5 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition-all ${
+                    readingMode === "scroll"
+                      ? "bg-violet-600 text-white"
+                      : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  <List size={16} />
+                  Scroll
+                </button>
 
-              <button
-                onClick={() => setReadingMode("single")}
-                className={`flex-1 sm:flex-none px-5 py-2.5 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition-all ${
-                  readingMode === "single"
-                    ? "bg-violet-600 text-white"
-                    : "text-gray-400 hover:text-white"
-                }`}
-              >
-                <Layers size={16} />
-                Single Page
-              </button>
+                <button
+                  onClick={() => setReadingMode("single")}
+                  className={`flex-1 sm:flex-none px-5 py-2.5 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition-all ${
+                    readingMode === "single"
+                      ? "bg-violet-600 text-white"
+                      : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  <Layers size={16} />
+                  Single Page
+                </button>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* READING AREA */}
 
-        <main className="max-w-3xl mx-auto px-3 md:px-5">
-          {totalPages > 0 ? (
+        {/* READING AREA */}
+
+        <main
+          className={`mx-auto px-3 md:px-5 ${
+            formatMode === "novel" ? "max-w-3xl" : "max-w-3xl"
+          }`}
+        >
+          {/* NOVEL READER */}
+          {formatMode === "novel" && (
+            <article className="rounded-xl border border-white/[0.06] bg-[#191a22] px-5 py-8 sm:px-10 sm:py-12 md:px-14">
+              {/* Novel Header */}
+              <div className="text-center mb-10 pb-8 border-b border-white/10">
+                <p className="text-violet-400 text-xs uppercase tracking-[0.2em] mb-3">
+                  Novel Edition
+                </p>
+
+                <h2 className="text-white text-xl sm:text-2xl font-semibold">
+                  {chapter.title}
+                </h2>
+
+                <p className="text-gray-500 text-xs mt-3">
+                  Chapter {chapter.chapterNumber}
+                </p>
+              </div>
+
+              {/* Novel Content */}
+              <div className="max-w-2xl mx-auto">
+                {chapter.content?.trim() ? (
+                  chapter.content
+                    .trim()
+                    .split(/\n\s*\n/)
+                    .map((paragraph, index) => (
+                      <p
+                        key={index}
+                        className="text-gray-300 text-[15px] sm:text-base leading-8 sm:leading-9 mb-7 whitespace-pre-line text-justify"
+                      >
+                        {paragraph.trim()}
+                      </p>
+                    ))
+                ) : (
+                  <p className="text-center text-gray-500 py-10">
+                    No novel content available.
+                  </p>
+                )}
+              </div>
+
+              {/* End of Novel */}
+              <div className="mt-12 pt-8 border-t border-white/10 text-center">
+                <p className="text-xs uppercase tracking-widest text-gray-600">
+                  End of Chapter {chapter.chapterNumber}
+                </p>
+              </div>
+            </article>
+          )}
+
+          {/* COMIC READER */}
+          {formatMode === "comic" && totalPages > 0 && (
             <>
               {/* SCROLL MODE */}
               {readingMode === "scroll" && (
@@ -288,59 +359,62 @@ function Chapters() {
 
               {/* SINGLE PAGE MODE */}
               {readingMode === "single" && (
-                <div className="relative bg-[#20212a] overflow-hidden">
-                  <img
-                    src={pages[currentPage].imageUrl}
-                    alt={`Manga page ${pages[currentPage].pageNumber}`}
-                    className="block w-full h-auto"
-                  />
+                <>
+                  <div className="relative bg-[#20212a] overflow-hidden">
+                    <img
+                      src={pages[currentPage].imageUrl}
+                      alt={`Manga page ${pages[currentPage].pageNumber}`}
+                      className="block w-full h-auto"
+                    />
 
-                  <span className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
-                    Page {pages[currentPage].pageNumber}
-                  </span>
-                </div>
-              )}
-
-              {/* PAGE NAVIGATION */}
-              {readingMode === "single" && (
-                <div className="flex items-center justify-between gap-2 py-8 border-b border-white/10">
-                  <button
-                    onClick={goToPrevPage}
-                    disabled={currentPage === 0}
-                    className="px-3 sm:px-4 py-3 rounded-lg border border-white/10 text-gray-400 text-xs sm:text-sm hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <ChevronLeft size={16} className="inline" />
-                    Previous Page
-                  </button>
-
-                  <span className="text-gray-500 text-xs sm:text-sm whitespace-nowrap">
-                    Page{" "}
-                    <span className="text-white">
-                      {pages[currentPage].pageNumber}
+                    <span className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
+                      Page {pages[currentPage].pageNumber}
                     </span>
-                    {" / "}
-                    {totalPages}
-                  </span>
+                  </div>
 
-                  <button
-                    onClick={goToNextPage}
-                    disabled={currentPage === totalPages - 1}
-                    className="px-3 sm:px-4 py-3 rounded-lg bg-violet-600 text-white text-xs sm:text-sm hover:bg-violet-500 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    Next Page
-                    <ChevronRight size={16} className="inline" />
-                  </button>
-                </div>
+                  {/* PAGE NAVIGATION */}
+                  <div className="flex items-center justify-between gap-2 py-8 border-b border-white/10">
+                    <button
+                      onClick={goToPrevPage}
+                      disabled={currentPage === 0}
+                      className="px-3 sm:px-4 py-3 rounded-lg border border-white/10 text-gray-400 text-xs sm:text-sm hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      <ChevronLeft size={16} className="inline" />
+                      Previous Page
+                    </button>
+
+                    <span className="text-gray-500 text-xs sm:text-sm whitespace-nowrap">
+                      Page{" "}
+                      <span className="text-white">
+                        {pages[currentPage].pageNumber}
+                      </span>
+                      {" / "}
+                      {totalPages}
+                    </span>
+
+                    <button
+                      onClick={goToNextPage}
+                      disabled={currentPage === totalPages - 1}
+                      className="px-3 sm:px-4 py-3 rounded-lg bg-violet-600 text-white text-xs sm:text-sm hover:bg-violet-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      Next Page
+                      <ChevronRight size={16} className="inline" />
+                    </button>
+                  </div>
+                </>
               )}
             </>
-          ) : (
+          )}
+
+          {/* EMPTY STATE */}
+          {formatMode === "none" && (
             <div className="text-center py-20 bg-[#191a22] rounded-xl border border-white/10">
               <BookOpen size={40} className="mx-auto text-gray-500 mb-4" />
 
-              <h3 className="text-white font-semibold">No pages available</h3>
+              <h3 className="text-white font-semibold">No content available</h3>
 
               <p className="text-gray-500 text-sm mt-2">
-                This chapter doesn't have any manga pages.
+                This chapter doesn't have any published content.
               </p>
             </div>
           )}
@@ -356,7 +430,7 @@ function Chapters() {
             <div className="flex items-center justify-between gap-3">
               {previousChapter ? (
                 <Link
-                  to={`/chapter/${previousChapter._id}`}
+                  to={`/book/chapter/${previousChapter._id}?mode=${formatMode}`}
                   className="flex-1 py-3 border border-white/10 rounded-lg text-center text-gray-300 hover:bg-white/5 text-xs md:text-sm"
                 >
                   ← Previous Chapter
@@ -372,7 +446,7 @@ function Chapters() {
 
               {nextChapter ? (
                 <Link
-                  to={`/chapter/${nextChapter._id}`}
+                  to={`/book/chapter/${nextChapter._id}?mode=${formatMode}`}
                   className="flex-1 py-3 bg-violet-600 rounded-lg text-center text-white hover:bg-violet-500 text-xs md:text-sm"
                 >
                   Next Chapter →

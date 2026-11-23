@@ -24,6 +24,7 @@ import AddChapter from "./admin/pages/Chapters/AddChapter";
 import EditChapter from "./admin/pages/Chapters/EditChapter";
 
 import ProtectedRoute from "./common/components/ProtectedRoute";
+import Pnf from "./common/pages/Pnf";
 
 function App() {
   const [loader, setLoader] = useState(false);
@@ -54,6 +55,7 @@ function App() {
         <Route path="/discover" element={<Discover />} />
         <Route path="/support" element={<Support />} />
         <Route path="/author" element={<Author />} />
+        <Route path="*" element={<Pnf />} />
 
         <Route path="/books/:slug" element={<BookDetails />} />
         <Route path="/book/chapter/:chapterId" element={<Chapters />} />

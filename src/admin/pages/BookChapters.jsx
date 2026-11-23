@@ -19,87 +19,6 @@ import AdminHeader from "../components/AdminHeader";
 import { deleteChapterAPI, getAdminChaptersAPI } from "../../services/allAPI";
 import { useEffect } from "react";
 
-// Static sample book and chapter data
-// const sampleBooks = [
-//   {
-//     id: "book-1",
-//     title: "Shadow Reborn",
-//     status: "Published",
-//     description:
-//       "A young warrior awakens in a world where shadows hold unimaginable power.",
-//     coverImage: "",
-//     chapters: [
-//       {
-//         id: "ch-1",
-//         chapterNumber: 1,
-//         title: "The Beginning",
-//         status: "Published",
-//         pages: ["page1.jpg", "page2.jpg", "page3.jpg"],
-//         updatedAt: "2026-11-05",
-//       },
-//       {
-//         id: "ch-2",
-//         chapterNumber: 2,
-//         title: "The Awakening",
-//         status: "Published",
-//         pages: ["page1.jpg", "page2.jpg"],
-//         updatedAt: "2026-11-06",
-//       },
-//       {
-//         id: "ch-3",
-//         chapterNumber: 3,
-//         title: "A New Enemy",
-//         status: "Draft",
-//         pages: ["page1.jpg", "page2.jpg", "page3.jpg", "page4.jpg"],
-//         updatedAt: "2026-11-08",
-//       },
-//       {
-//         id: "ch-4",
-//         chapterNumber: 4,
-//         title: "The Final Battle",
-//         status: "Scheduled",
-//         pages: ["page1.jpg", "page2.jpg"],
-//         updatedAt: "2026-11-09",
-//         scheduledAt: "2026-11-15",
-//       },
-//     ],
-//   },
-//   {
-//     id: "book-2",
-//     title: "The Last Horizon",
-//     status: "Published",
-//     description:
-//       "An adventure beyond the known world, where every discovery brings a new mystery.",
-//     coverImage: "",
-//     chapters: [
-//       {
-//         id: "ch-5",
-//         chapterNumber: 1,
-//         title: "Lost World",
-//         status: "Published",
-//         pages: ["page1.jpg", "page2.jpg"],
-//         updatedAt: "2026-11-04",
-//       },
-//       {
-//         id: "ch-6",
-//         chapterNumber: 2,
-//         title: "The Journey",
-//         status: "Draft",
-//         pages: ["page1.jpg", "page2.jpg", "page3.jpg"],
-//         updatedAt: "2026-11-07",
-//       },
-//     ],
-//   },
-//   {
-//     id: "book-3",
-//     title: "Crimson Fate",
-//     status: "Draft",
-//     description: "A story of destiny, betrayal, and an unexpected power.",
-//     coverImage: "",
-//     chapters: [],
-//   },
-// ];
-
 function BookChapters() {
   const navigate = useNavigate();
   const { bookId } = useParams();
@@ -139,11 +58,15 @@ function BookChapters() {
 
   // Statistics
   const publishedCount = chapters.filter(
-    (chapter) => chapter.status === "Published",
+    (chapter) =>
+      chapter.novelStatus === "Published" ||
+      chapter.comicStatus === "Published",
   ).length;
 
   const draftCount = chapters.filter(
-    (chapter) => chapter.status === "Draft",
+    (chapter) =>
+      (chapter.content?.trim() && chapter.novelStatus === "Draft") ||
+      (chapter.pages?.length > 0 && chapter.comicStatus === "Draft"),
   ).length;
 
   const scheduledCount = chapters.filter(
@@ -167,8 +90,12 @@ function BookChapters() {
       );
       alert("Chapter deleted successfully!");
     } catch (error) {
-      console.error("delete chapter error:", error);
-      alert("something went wrong");
+      console.error("Delete chapter error:", error);
+      alert(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to delete chapter.",
+      );
     }
   };
 
@@ -219,7 +146,8 @@ function BookChapters() {
           <h2 className="text-lg font-semibold">Book not found</h2>
 
           <p className="mt-2 text-sm text-gray-500">
-            The selected book does not exist in the sample data.
+            The selected book could not be found. Please check the book or try
+            again.
           </p>
 
           <button
@@ -390,36 +318,49 @@ function BookChapters() {
                         {chapter.title}
                       </h3>
 
-                      <span
-                        className={`rounded-md border px-2 py-1 text-[10px] font-medium ${getStatusStyle(
-                          chapter.status,
-                        )}`}
-                      >
-                        {chapter.status || "Draft"}
-                      </span>
+                      {chapter.content?.trim() && (
+                        <span
+                          className={`rounded-md border px-2 py-1 text-[10px] font-medium ${getStatusStyle(
+                            chapter.novelStatus,
+                          )}`}
+                        >
+                          Novel: {chapter.novelStatus}
+                        </span>
+                      )}
+
+                      {chapter.pages?.length > 0 && (
+                        <span
+                          className={`rounded-md border px-2 py-1 text-[10px] font-medium ${getStatusStyle(
+                            chapter.comicStatus,
+                          )}`}
+                        >
+                          Comic: {chapter.comicStatus}
+                        </span>
+                      )}
                     </div>
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500">
-                      <span className="flex items-center gap-1.5">
-                        <ImageIcon size={13} />
-                        {chapter.pages?.length || 0} Pages
-                      </span>
+                      {chapter.content?.trim() && (
+                        <span className="flex items-center gap-1.5">
+                          <BookOpen size={13} />
+                          Novel
+                        </span>
+                      )}
+
+                      {chapter.pages?.length > 0 && (
+                        <span className="flex items-center gap-1.5">
+                          <ImageIcon size={13} />
+                          {chapter.pages.length} Pages
+                        </span>
+                      )}
 
                       <span>Updated: {formatDate(chapter.updatedAt)}</span>
-
-                      {chapter.status === "Scheduled" &&
-                        chapter.scheduledAt && (
-                          <span className="flex items-center gap-1 text-blue-400">
-                            <CalendarClock size={13} />
-                            {formatDate(chapter.scheduledAt)}
-                          </span>
-                        )}
                     </div>
                   </div>
 
                   {/* Actions */}
                   <div className="flex flex-wrap items-center gap-2">
-                    <button
+                    {/* <button
                       onClick={() =>
                         navigate(
                           `/admin/chapters/${bookId}/${chapter._id}/edit`,
@@ -429,7 +370,7 @@ function BookChapters() {
                     >
                       <Pencil size={14} />
                       Edit
-                    </button>
+                    </button> */}
 
                     <button
                       onClick={() => handleDeleteChapter(chapter._id)}
@@ -509,7 +450,13 @@ function StatCard({ title, value, icon: Icon, color }) {
         </div>
       </div>
 
-      <h3 className="mt-4 text-2xl font-bold sm:text-3xl">{value}</h3>
+      <h3 className="mt-4">
+        {typeof value === "number" ? (
+          <span className="text-2xl font-bold sm:text-3xl">{value}</span>
+        ) : (
+          value
+        )}
+      </h3>
     </div>
   );
 }
