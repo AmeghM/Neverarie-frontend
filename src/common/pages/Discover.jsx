@@ -80,6 +80,7 @@ function Discover() {
                     alt={book.title}
                     className="w-full aspect-2/3 object-cover rounded-lg object-top "
                     style={{ objectPosition: "center top" }}
+                    loading="lazy"
                   />
 
                   {/* Floating preview card */}

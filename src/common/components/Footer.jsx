@@ -125,7 +125,7 @@ function Footer() {
             <ul className="flex flex-col gap-3 text-sm">
               <li>
                 <a
-                  href="#"
+                  href="https://www.instagram.com/ats4ver?lqvp=MTN0Nzg4OHZqZTY2Mg=="
                   className="inline-flex items-center gap-1.5 transition-all duration-200 hover:text-[#A78BFA]"
                 >
                   Instagram <MoveUpRight size={13} />
@@ -133,7 +133,7 @@ function Footer() {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/"
                   className="inline-flex items-center gap-1.5 transition-all duration-200 hover:text-[#A78BFA]"
                 >
                   Discord <MoveUpRight size={13} />

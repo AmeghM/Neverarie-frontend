@@ -1,3 +1,4 @@
+import { MoonStar } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function Cursor() {
@@ -55,7 +56,7 @@ function Cursor() {
             filter: "drop-shadow(0 0 8px #C4B5FD)",
           }}
         >
-          ✦
+          <MoonStar />
         </span>
       </div>
     </div>
